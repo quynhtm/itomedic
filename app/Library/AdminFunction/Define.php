@@ -22,33 +22,19 @@ class Define
     const DB_PASSWORD = '';
     //server
 
-    const TABLE_USER = 'hr_user';
-    const TABLE_GROUP_USER = 'hr_group_user';
-    const TABLE_PERMISSION = 'hr_permission';
-    const TABLE_MENU_SYSTEM = 'hr_menu_system';
-    const TABLE_ROLE_MENU = 'hr_role_menu';
-    const TABLE_ROLE = 'hr_role';
-    const TABLE_PROVINCE = 'hr_province';
-    const TABLE_DISTRICTS = 'hr_districts';
-    const TABLE_WARDS = 'hr_wards';
-    const TABLE_MEMBER = 'hr_member';
-    const TABLE_GROUP_USER_PERMISSION = 'hr_group_user_permission';
-    const TABLE_HR_CATEGORY = 'hr_category';
-    const TABLE_HR_PERSON = 'hr_personnel';
-    const TABLE_HR_DEFINE = 'hr_define';
-    const TABLE_HR_DEPARTMENT = 'hr_department';
-    const TABLE_HR_DEVICE = 'hr_device';
-    const TABLE_HR_LOG = 'hr_log';
-    const TABLE_HR_BONUS = 'hr_bonus';//khen thưởng
-    const TABLE_HR_RELATIONSHIP = 'hr_relationship';
-    const TABLE_HR_CONTRACTS = 'hr_contracts';
-    const TABLE_HR_CURRICULUM_VITAE = 'hr_curriculum_vitae';//lý lịch 2C: thông tin đào tạo, công tác
-    const TABLE_HR_DOCUMENT = 'hr_document';//van ban
-    const TABLE_HR_MAIL = 'hr_mail';// mail
-    const TABLE_HR_JOB_ASSIGNMENT = 'hr_job_assignment';// bổ nhiệm chức vụ
-    const TABLE_HR_RETIREMENT = 'hr_retirement';// Nghi hưu
-    const TABLE_HR_QUIT_JOB = 'hr_quit_job';// Nghi việc
-    const TABLE_HR_PASSPORT = 'hr_passport';// Hộ chiếu mã số thuế
+    const TABLE_USER = 'web_user';
+    const TABLE_GROUP_USER = 'web_group_user';
+    const TABLE_PERMISSION = 'web_permission';
+    const TABLE_MENU_SYSTEM = 'web_menu_system';
+    const TABLE_ROLE_MENU = 'web_role_menu';
+    const TABLE_ROLE = 'web_role';
+    const TABLE_GROUP_USER_PERMISSION = 'web_group_user_permission';
+    const TABLE_WEB_CATEGORY = 'web_category';
+    const TABLE_WEB_BANNER = 'web_banner';
+    const TABLE_WEB_CONTACT = 'web_contact';
+    const TABLE_WEB_NEW = 'web_new';
+    const TABLE_WEB_VIDEO = 'web_video';
+
 
     /***************************************************************************************************************
      * //Memcache
