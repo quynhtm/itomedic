@@ -2,7 +2,7 @@
 /**
  * QuynhTM
  */
-namespace App\Http\Models\Hr;
+namespace App\Http\Models\News;
 use App\Http\Models\BaseModel;
 
 use Illuminate\Support\Facades\Cache;
@@ -10,28 +10,22 @@ use Illuminate\Support\Facades\DB;
 use App\library\AdminFunction\Define;
 use App\Library\AdminFunction\FunctionLib;
 
-class Passport extends BaseModel
+class News extends BaseModel
 {
-    protected $table = Define::TABLE_HR_PASSPORT;
-    protected $primaryKey = 'passport_id';
+    protected $table = Define::TABLE_WEB_NEW;
+    protected $primaryKey = 'news_id';
     public $timestamps = false;
 
-    protected $fillable = array('passport_project', 'passport_person_id', 'passport_common', 'passport_common_date_range', 'passport_common_date_expiration',
-        'passport_common_address_range', 'passport_equitment','passport_equitment_date_range','passport_equitment_date_expiration'
-    ,'passport_equitment_date_expiration','passport_equitment_address_range','passport_personal_code','passport_bank_account_number','passport_bank_account');
-
-    public static function getPassportByPersonId($passport_person_id)
-    {
-        $data = Passport::where('passport_person_id', $passport_person_id)->first();
-        return $data;
-    }
+    protected $fillable = array('news_title', 'news_desc_sort', 'news_content', 'news_image', 'news_image_other',
+        'news_type', 'news_category','news_category_name','news_status'
+    ,'news_hot','meta_title','meta_keywords','meta_description ','news_create','news_user_create','news_update','news_user_update');
 
     public static function createItem($data){
         try {
             DB::connection()->getPdo()->beginTransaction();
-            $checkData = new Passport();
+            $checkData = new News();
             $fieldInput = $checkData->checkField($data);
-            $item = new Passport();
+            $item = new News();
             if (is_array($fieldInput) && count($fieldInput) > 0) {
                 foreach ($fieldInput as $k => $v) {
                     $item->$k = $v;
@@ -40,8 +34,8 @@ class Passport extends BaseModel
             $item->save();
 
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->passport_id,$item);
-            return $item->passport_id;
+            self::removeCache($item->news_id,$item);
+            return $item->news_id;
         } catch (PDOException $e) {
             DB::connection()->getPdo()->rollBack();
             throw new PDOException();
@@ -51,15 +45,15 @@ class Passport extends BaseModel
     public static function updateItem($id,$data){
         try {
             DB::connection()->getPdo()->beginTransaction();
-            $checkData = new Passport();
+            $checkData = new News();
             $fieldInput = $checkData->checkField($data);
-            $item = Passport::find($id);
+            $item = News::find($id);
             foreach ($fieldInput as $k => $v) {
                 $item->$k = $v;
             }
             $item->update();
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->passport_id,$item);
+            self::removeCache($item->news_id,$item);
             return true;
         } catch (PDOException $e) {
             //var_dump($e->getMessage());
@@ -85,12 +79,12 @@ class Passport extends BaseModel
         if($id <= 0) return false;
         try {
             DB::connection()->getPdo()->beginTransaction();
-            $item = Passport::find($id);
+            $item = News::find($id);
             if($item){
                 $item->delete();
             }
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->passport_id,$item);
+            self::removeCache($item->news_id,$item);
             return true;
         } catch (PDOException $e) {
             DB::connection()->getPdo()->rollBack();
@@ -107,12 +101,12 @@ class Passport extends BaseModel
 
     public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
         try{
-            $query = Passport::where('passport_id','>',0);
+            $query = News::where('news_id','>',0);
             if (isset($dataSearch['menu_name']) && $dataSearch['menu_name'] != '') {
                 $query->where('menu_name','LIKE', '%' . $dataSearch['menu_name'] . '%');
             }
             $total = $query->count();
-            $query->orderBy('passport_id', 'desc');
+            $query->orderBy('news_id', 'desc');
 
             //get field can lay du lieu
             $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',',trim($dataSearch['field_get'])): array();
