@@ -10,20 +10,20 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\BaseSiteController;
 
-class IndexController extends BaseSiteController{
-	
-	public function __construct(){
-		parent::__construct();
-	}
-	public function index(){
-		$this->header();
-		$this->footer();
-		$this->master();
-        return view('site_itomedic.home',[
+class TrainingController extends BaseSiteController{
+
+    public function __construct(){
+        parent::__construct();
+    }
+    public function index(){
+        $this->header();
+        $this->footer();
+        $this->master();
+        return view('site_itomedic.dao_tao_y_te',[
                 'user'=>array()]
         );
-	}
+    }
     public function actionRouter($catname, $catid){
-        
+
     }
 }
