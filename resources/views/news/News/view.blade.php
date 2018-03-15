@@ -92,7 +92,7 @@
                     </table>
                     </div>
                     <div class="text-right">
-                        {{$paging}}
+                        {!! $paging !!}
                     </div>
                 @else
                     <div class="alert">
