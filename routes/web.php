@@ -3,6 +3,7 @@ Auth::routes();
 
 const Admin = "Admin";
 const Site = "Site";
+const News = "News";
 
 // Used for dev by Quynh
 $isDev = Request::get('is_debug','');
@@ -20,6 +21,11 @@ Route::match(['GET','POST'], '/quantri.html', array('as' => 'admin.login','uses'
 
 Route::group(array('prefix' => 'manager', 'before' => ''), function(){
 	require __DIR__.'/admin.php';
+});
+
+//News
+Route::group(array('prefix' => 'manager', 'before' => ''), function(){
+	require __DIR__.'/news.php';
 });
 
 //Router Api
