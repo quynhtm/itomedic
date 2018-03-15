@@ -10,7 +10,7 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\BaseSiteController;
 
-class SingleCartController extends BaseSiteController{
+class ProductController extends BaseSiteController{
 
     public function __construct(){
         parent::__construct();
@@ -19,7 +19,7 @@ class SingleCartController extends BaseSiteController{
         $this->header();
         $this->footer();
         $this->master();
-        return view('site.single_cart',[
+        return view('site_itomedic.san_pham',[
                 'user'=>array()]
         );
     }
