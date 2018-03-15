@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\News;
 
 use App\Http\Controllers\BaseAdminController;
-use App\Http\Models\Admin\MenuSystem;
+use App\Http\Models\News\CategoryNew;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\CGlobal;
 use App\Library\AdminFunction\Define;
@@ -14,21 +14,21 @@ use App\Library\AdminFunction\Pagging;
 
 class CategoryNewsController extends BaseAdminController
 {
-    private $permission_view = 'menu_view';
-    private $permission_full = 'menu_full';
-    private $permission_delete = 'menu_delete';
-    private $permission_create = 'menu_create';
-    private $permission_edit = 'menu_edit';
+    private $permission_view = 'categoryNewView';
+    private $permission_full = 'categoryNewFull';
+    private $permission_delete = 'categoryNewDelete';
+    private $permission_create = 'categoryNewCreate';
+    private $permission_edit = 'categoryNewEdit';
     private $arrStatus = array();
     private $error = array();
+    private $arrayCategorySearch = [];
     private $arrMenuParent = array();
     private $viewPermission = array();//check quyen
 
     public function __construct()
     {
         parent::__construct();
-        $this->arrMenuParent = MenuSystem::getAllParentMenu();
-        CGlobal::$pageAdminTitle = 'Quản lý menu';
+        CGlobal::$pageAdminTitle = 'Danh mục tin tức';
     }
 
     public function getDataDefault(){
@@ -54,35 +54,32 @@ class CategoryNewsController extends BaseAdminController
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
         $pageNo = (int) Request::get('page_no',1);
-        $sbmValue = Request::get('submit', 1);
-        $limit = 200;
+        $limit = CGlobal::number_limit_show;
         $offset = ($pageNo - 1) * $limit;
         $search = $data = array();
         $total = 0;
-
-        $search['menu_name'] = addslashes(Request::get('menu_name',''));
+        $search['category_name'] = Request::get('category_name','');
+        $search['category_type'] = Request::get('category_type',0);
         $search['active'] = (int)Request::get('active',-1);
         //$search['field_get'] = 'menu_name,menu_id,parent_id';//cac truong can lay
 
-        $dataSearch = MenuSystem::searchByCondition($search, $limit, $offset,$total);
-        if(!empty($dataSearch)){
-            $data = MenuSystem::getTreeMenu($dataSearch);
-            $data = !empty($data)? $data :$dataSearch;
-        }
-        $paging = '';
-
-        //FunctionLib::debug($data);
+        $dataSearch = CategoryNew::searchByCondition($search, $limit, $offset,$total);
+        $paging = $total > 0 ? Pagging::getNewPager(3,$pageNo,$total,$limit,$search) : '';
         $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, $search['active']);
+        $optionCategoryType = FunctionLib::getOption(array(0=>'--Chọn loại danh mục--')+Define::$arrCategoryType, $search['category_type']);
 
         $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminMenuSystem.view',array_merge([
-            'data'=>$data,
+        return view('news.CategoryNew.view',array_merge([
+            'data'=>$dataSearch,
             'search'=>$search,
             'total'=>$total,
             'stt'=>($pageNo - 1) * $limit,
             'paging'=>$paging,
+            'arrayStatus'=>$this->arrStatus,
             'optionStatus'=>$optionStatus,
+            'optionCategoryType'=>$optionCategoryType,
+            'arrCategoryType'=>Define::$arrCategoryType,
         ],$this->viewPermission));
     }
 
@@ -94,26 +91,21 @@ class CategoryNewsController extends BaseAdminController
         }
         $data = array();
         if($id > 0) {
-            $data = MenuSystem::find($id);
+            $data = CategoryNew::find($id);
         }
 
         $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['active'])? $data['active']: CGlobal::status_show);
-        $optionShowContent = FunctionLib::getOption($this->arrStatus, isset($data['showcontent'])? $data['showcontent']: CGlobal::status_show);
-        $optionShowPermission = FunctionLib::getOption($this->arrStatus, isset($data['show_permission'])? $data['show_permission']: CGlobal::status_hide);
-        $optionShowMenu = FunctionLib::getOption($this->arrStatus, isset($data['show_menu'])? $data['show_menu']: CGlobal::status_show);
-        $optionMenuParent = FunctionLib::getOption($this->arrMenuParent, isset($data['parent_id'])? $data['parent_id'] : 0);
-
+        $optionCategoryType = FunctionLib::getOption(Define::$arrCategoryType, isset($data['category_type'])? $data['category_type'] : Define::Category_News_Menu);
         $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminMenuSystem.add',array_merge([
+        return view('news.CategoryNew.add',array_merge([
             'data'=>$data,
             'id'=>$id,
             'arrStatus'=>$this->arrStatus,
             'optionStatus'=>$optionStatus,
-            'optionShowContent'=>$optionShowContent,
-            'optionShowPermission'=>$optionShowPermission,
-            'optionShowMenu'=>$optionShowMenu,
-            'optionMenuParent'=>$optionMenuParent,
+            'optionCategoryType'=>$optionCategoryType,
+            'arrCategoryType'=>Define::$arrCategoryType,
+
         ],$this->viewPermission));
     }
 
@@ -124,61 +116,54 @@ class CategoryNewsController extends BaseAdminController
         }
         $id_hiden = (int)Request::get('id_hiden', 0);
         $data = $_POST;
-        if(!$this->is_boss){
-            unset($data['menu_url']);
-        }
-        $data['ordering'] = (int)($data['ordering']);
+//        FunctionLib::debug($data);
+        $data['category_order'] = (int)($data['category_order']);
+
         if($this->valid($data) && empty($this->error)) {
             $id = ($id == 0)?$id_hiden: $id;
             if($id > 0) {
                 //cap nhat
-                if(MenuSystem::updateItem($id, $data)) {
-                    return Redirect::route('admin.menuView');
+                if(CategoryNew::updateItem($id, $data)) {
+                    return Redirect::route('admin.categoryNews');
                 }
             }else{
                 //them moi
-                if(MenuSystem::createItem($data)) {
-                    return Redirect::route('admin.menuView');
+                if(CategoryNew::createItem($data)) {
+                    return Redirect::route('admin.categoryNews');
                 }
             }
         }
 
         $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['active'])? $data['active']: CGlobal::status_hide);
-        $optionShowContent = FunctionLib::getOption($this->arrStatus, isset($data['showcontent'])? $data['showcontent']: CGlobal::status_show);
-        $optionShowMenu = FunctionLib::getOption($this->arrStatus, isset($data['show_menu'])? $data['show_menu']: CGlobal::status_show);
-        $optionShowPermission = FunctionLib::getOption($this->arrStatus, isset($data['show_permission'])? $data['show_permission']: CGlobal::status_hide);
-        $optionMenuParent = FunctionLib::getOption($this->arrMenuParent, isset($data['parent_id'])? $data['parent_id'] : 0);
-
+        $optionCategoryType = FunctionLib::getOption(Define::$arrCategoryType, isset($data['category_type'])? $data['category_type'] : Define::Category_News_Menu);
         $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminMenuSystem.add',array_merge([
+        return view('admin.AdminCategoryNew.add',array_merge([
             'data'=>$data,
             'id'=>$id,
             'error'=>$this->error,
             'arrStatus'=>$this->arrStatus,
             'optionStatus'=>$optionStatus,
-            'optionShowContent'=>$optionShowContent,
-            'optionShowPermission'=>$optionShowPermission,
-            'optionShowMenu'=>$optionShowMenu,
-            'optionMenuParent'=>$optionMenuParent,
+            'arrCategoryType'=>Define::$arrCategoryType,
+            'optionCategoryType'=>$optionCategoryType
         ],$this->viewPermission));
     }
 
-    public function deleteMenu()
+    public function deleteCategoryNews()
     {
         $data = array('isIntOk' => 0);
         if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_delete,$this->permission)){
             return Response::json($data);
         }
         $id = (int)Request::get('id', 0);
-        if ($id > 0 && MenuSystem::deleteItem($id)) {
+        if ($id > 0 && CategoryNew::deleteItem($id)) {
             $data['isIntOk'] = 1;
         }
         return Response::json($data);
     }
     private function valid($data=array()) {
         if(!empty($data)) {
-            if(isset($data['banner_name']) && trim($data['banner_name']) == '') {
+            if(isset($data['category_name']) && trim($data['category_name']) == '') {
                 $this->error[] = 'Null';
             }
         }

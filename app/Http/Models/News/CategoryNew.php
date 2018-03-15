@@ -2,7 +2,7 @@
 /**
  * QuynhTM
  */
-namespace App\Http\Models\CategoryNew;
+namespace App\Http\Models\News;
 use App\Http\Models\BaseModel;
 
 use Illuminate\Support\Facades\Cache;
@@ -102,11 +102,20 @@ class CategoryNew extends BaseModel
     public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
         try{
             $query = CategoryNew::where('category_id','>',0);
-            if (isset($dataSearch['menu_name']) && $dataSearch['menu_name'] != '') {
-                $query->where('menu_name','LIKE', '%' . $dataSearch['menu_name'] . '%');
+            if (isset($dataSearch['category_name']) && $dataSearch['category_name'] != '') {
+                $query->where('category_name','LIKE', '%' . $dataSearch['category_name'] . '%');
+            }
+            if (isset($dataSearch['category_type']) && $dataSearch['category_type'] >0) {
+                $query->where('category_type', $dataSearch['category_type'] );
+            }
+            if (isset($dataSearch['category_order']) && $dataSearch['category_order'] != '') {
+                $query->where('category_order','LIKE', '%' . $dataSearch['category_order'] . '%');
+            }
+            if (isset($dataSearch['category_status']) && $dataSearch['category_status'] != -1) {
+                $query->where('category_status',$dataSearch['category_status'] );
             }
             $total = $query->count();
-            $query->orderBy('category_id', 'desc');
+            $query->orderBy('category_type', 'ASC');
 
             //get field can lay du lieu
             $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',',trim($dataSearch['field_get'])): array();
