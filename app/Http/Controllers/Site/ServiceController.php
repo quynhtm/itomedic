@@ -10,7 +10,7 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\BaseSiteController;
 
-class ListProductController extends BaseSiteController{
+class ServiceController extends BaseSiteController{
 
     public function __construct(){
         parent::__construct();
@@ -19,7 +19,7 @@ class ListProductController extends BaseSiteController{
         $this->header();
         $this->footer();
         $this->master();
-        return view('site.list_product',[
+        return view('site_itomedic.dich_vu_kham_chua_benh',[
                 'user'=>array()]
         );
     }

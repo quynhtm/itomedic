@@ -10,7 +10,7 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\BaseSiteController;
 
-class SingleController extends BaseSiteController{
+class IntroduceController extends BaseSiteController{
 
     public function __construct(){
         parent::__construct();
@@ -19,7 +19,7 @@ class SingleController extends BaseSiteController{
         $this->header();
         $this->footer();
         $this->master();
-        return view('site.single',[
+        return view('site_itomedic.gioi_thieu',[
                 'user'=>array()]
         );
     }
