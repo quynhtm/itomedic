@@ -100,7 +100,7 @@ var Admin = {
             var _token = $('input[name="_token"]').val();
             var url_ajax = '';
             if (type == 1) { //xoa tin tức
-                url_ajax = 'deleteNews';
+                url_ajax = 'deleteCategoryNews';
             } else if (type == 2) {
                 url_ajax = 'deleteCustomer';
             } else if (type == 3) {

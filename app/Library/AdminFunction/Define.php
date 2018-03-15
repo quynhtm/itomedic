@@ -221,5 +221,14 @@ class Define
         self::sizeImage_300 => array('w' => self::sizeImage_300, 'h' => self::sizeImage_300),
         self::sizeImage_450 => array('w' => self::sizeImage_450, 'h' => self::sizeImage_450),
     );
-
+    const Category_News_Menu = 1;
+    const Category_News_News = 2;
+    const Category_News_Product = 3;
+    const Category_News_Note = 4;
+    public static $arrCategoryType = [
+        self::Category_News_Menu => 'Danh Mục Menu',
+        self::Category_News_News => 'Danh Mục Tin Tức',
+        self::Category_News_Product => 'Danh Mục Sản Phẩm',
+        self::Category_News_Note => 'Danh Mục Ghi Chú',
+    ];
 }
