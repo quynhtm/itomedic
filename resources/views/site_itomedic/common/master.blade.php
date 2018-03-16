@@ -54,7 +54,7 @@
 	<script>
 		$(document).ready(function () {
 			$('#horizontalTab').easyResponsiveTabs({
-				type: 'default', //Types: default, vertical, accordion           
+				type: 'default', //Types: default, vertical, accordion
 				width: 'auto', //auto or any width like 600px
 				fit: true, // 100% fit in a container
 				closed: 'accordion', // Start closed if in accordion view
@@ -96,7 +96,7 @@
 							  			containerID: 'toTop', // fading element id
 										containerHoverID: 'toTopHover', // fading element hover id
 										scrollSpeed: 1200,
-										easingType: 'linear' 
+										easingType: 'linear'
 							 		};
 									*/
 
