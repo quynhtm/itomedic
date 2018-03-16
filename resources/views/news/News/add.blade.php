@@ -9,8 +9,8 @@
                 <i class="ace-icon fa fa-home home-icon"></i>
                 <a href="{{URL::route('admin.dashboard')}}">Home</a>
             </li>
-            <li><a href="{{URL::route('admin.menuView')}}"> Danh sách menu</a></li>
-            <li class="active">@if($id > 0)Cập nhật menu @else Tạo mới menu @endif</li>
+            <li><a href="{{URL::route('admin.newsView')}}"> Danh sách Tin tức</a></li>
+            <li class="active">@if($id > 0)Cập nhật tin tức @else Tạo mới tin tức@endif</li>
         </ul><!-- /.breadcrumb -->
     </div>
 
@@ -26,34 +26,45 @@
                         @endforeach
                     </div>
                 @endif
-                <div style="float: left; width: 50%">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Tên menu Viet Nam<span class="red"> (*) </span></label>
-                            <input type="text" placeholder="Tên menu" id="menu_name" name="menu_name"  class="form-control input-sm" value="@if(isset($data['menu_name'])){{$data['menu_name']}}@endif">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Router menu<span class="red"> (*) </span></label>
-                            <input type="text" placeholder="link menu" id="menu_url" name="menu_url"  class="form-control input-sm" value="@if(isset($data['menu_url'])){{$data['menu_url']}}@endif">
-                        </div>
-                    </div>
-
-                    <div class="clearfix"></div>
-                    {{--<div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Tên menu English<span class="red"> (*) </span></label>
-                            <input type="text" placeholder="Tên menu" id="menu_name_en" name="menu_name_en"  class="form-control input-sm" value="@if(isset($data['menu_name_en'])){{$data['menu_name_en']}}@endif">
-                        </div>
-                    </div>--}}
+                <div>
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <label for="name" class="control-label">Thuộc menu cha</label>
-                            <select name="parent_id" id="parent_id" class="form-control input-sm">
-                                <option value="0">--- Chọn menu cha ---</option>
-                                {!! $optionMenuParent !!}}
+                            <label for="name" class="control-label">Tiêu đề tin<span class="red"> (*) </span></label>
+                            <input type="text" placeholder="Tên bài viết" id="news_title" name="news_title"  class="form-control input-sm" value="@if(isset($data['news_title'])){{$data['news_title']}}@endif">
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="name" class="control-label">Thuộc danh mục</label>
+                            <select name="news_category" id="news_category" class="form-control input-sm">
+                                <option value="0">--- Chọn danh mục ---</option>
+                                {!! $optionStatus !!}}
                             </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="name" class="control-label">Loại tin</label>
+                            <select name="news_type" id="news_type" class="form-control input-sm">
+                                <option value="0">--- Chọn loại tin ---</option>
+                                {!! $optionStatus !!}}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="name" class="control-label">Trạng thái</label>
+                            <select name="news_status" id="news_status" class="form-control input-sm">
+                                <option value="0">--- Chọn trạng thái---</option>
+                                {!! $optionStatus !!}}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="name" class="control-label">Mô tả ngắn</label>
+                            <textarea class="form-control input-sm"  name="news_content">@if(isset($data['news_content'])){{$data['news_content']}}@endif</textarea>
                         </div>
                     </div>
 
@@ -107,7 +118,7 @@
 
                     <div class="clearfix"></div>
                     <div class="form-group col-sm-12 text-left">
-                        <a class="btn btn-warning" href="{{URL::route('admin.menuView')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
+                        <a class="btn btn-warning" href="{{URL::route('admin.newsView')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
                         <button  class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('save')}}</button>
                     </div>
                     <input type="hidden" id="id_hiden" name="id_hiden" value="{{$id}}"/>
