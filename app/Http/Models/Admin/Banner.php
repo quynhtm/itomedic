@@ -88,11 +88,17 @@ class Banner extends BaseModel{
     public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
         try{
             $query = Banner::where('banner_id','>',0);
-            if (isset($dataSearch['role_name']) && $dataSearch['role_name'] != '') {
-                $query->where('role_name','LIKE', '%' . $dataSearch['role_name'] . '%');
+            if (isset($dataSearch['banner_name']) && $dataSearch['banner_name'] != '') {
+                $query->where('banner_name','LIKE', '%' . $dataSearch['banner_name'] . '%');
+            }if (isset($dataSearch['banner_page']) && $dataSearch['banner_page'] > 0) {
+                $query->where('banner_page', $dataSearch['banner_page'] );
+            }if (isset($dataSearch['banner_status']) && $dataSearch['banner_status'] != -2) {
+                $query->where('banner_status', $dataSearch['banner_status'] );
+            }if (isset($dataSearch['banner_type']) && $dataSearch['banner_type'] >0 ) {
+                $query->where('banner_type',$dataSearch['banner_type']);
             }
             $total = $query->count();
-            $query->orderBy('role_order', 'asc');
+            $query->orderBy('banner_id', 'asc');
 
             $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',',trim($dataSearch['field_get'])): array();
             if($limit > 0){

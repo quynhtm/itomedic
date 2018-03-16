@@ -87,11 +87,15 @@ class Contact extends BaseModel{
     public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
         try{
             $query = Contact::where('contact_id','>',0);
-            if (isset($dataSearch['role_name']) && $dataSearch['role_name'] != '') {
-                $query->where('role_name','LIKE', '%' . $dataSearch['role_name'] . '%');
+            if (isset($dataSearch['contact_title']) && $dataSearch['contact_title'] != '') {
+                $query->where('contact_title','LIKE', '%' . $dataSearch['contact_title'] . '%');
+            }if (isset($dataSearch['contact_content']) && $dataSearch['contact_content'] != '') {
+                $query->where('contact_content','LIKE', '%' . $dataSearch['contact_content'] . '%');
+            }if (isset($dataSearch['contact_user_name_send']) && $dataSearch['contact_user_name_send'] != '') {
+                $query->where('contact_user_name_send','LIKE', '%' . $dataSearch['contact_user_name_send'] . '%');
             }
             $total = $query->count();
-            $query->orderBy('role_order', 'asc');
+            $query->orderBy('contact_id', 'asc');
 
             $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',',trim($dataSearch['field_get'])): array();
             if($limit > 0){
