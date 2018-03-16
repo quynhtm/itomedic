@@ -121,7 +121,14 @@ var Admin = {
                 url_ajax = 'deleteCarrierSetting';
             } else if (type == 15) {
                 url_ajax = 'deleteDeviceToken';
+            } else if (type == 16) { //xoa video
+                url_ajax = 'deleteVideo';
+            } else if (type == 17) { //xoa banner
+                url_ajax = 'deleteBanner';
+            }else if (type == 18) { //xoa contact
+                url_ajax = 'deleteContact';
             }
+
             if (url_ajax != '') {
                 $.ajax({
                     type: "post",

@@ -9,8 +9,8 @@
                 <i class="ace-icon fa fa-home home-icon"></i>
                 <a href="{{URL::route('admin.dashboard')}}">Home</a>
             </li>
-            <li><a href="{{URL::route('admin.categoryNews')}}"> Danh sách menu</a></li>
-            <li class="active">@if($id > 0)Cập nhật menu @else Tạo mới menu @endif</li>
+            <li><a href="{{URL::route('admin.categoryNews')}}"> Danh sách danh mục</a></li>
+            <li class="active">@if($id > 0)Cập nhật danh mục @else Tạo mới danh mục @endif</li>
         </ul><!-- /.breadcrumb -->
     </div>
 
