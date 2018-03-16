@@ -104,14 +104,11 @@ class CategoryNew extends BaseModel
             $query = CategoryNew::where('category_id','>',0);
             if (isset($dataSearch['category_name']) && $dataSearch['category_name'] != '') {
                 $query->where('category_name','LIKE', '%' . $dataSearch['category_name'] . '%');
-            }
-            if (isset($dataSearch['category_type']) && $dataSearch['category_type'] >0) {
+            }if (isset($dataSearch['category_type']) && $dataSearch['category_type'] >0) {
                 $query->where('category_type', $dataSearch['category_type'] );
-            }
-            if (isset($dataSearch['category_order']) && $dataSearch['category_order'] != '') {
-                $query->where('category_order','LIKE', '%' . $dataSearch['category_order'] . '%');
-            }
-            if (isset($dataSearch['category_status']) && $dataSearch['category_status'] != -1) {
+            }if (isset($dataSearch['category_order']) && $dataSearch['category_order'] != '') {
+                $query->where('category_order',$dataSearch['category_order']);
+            }if (isset($dataSearch['category_status']) && $dataSearch['category_status'] != -2) {
                 $query->where('category_status',$dataSearch['category_status'] );
             }
             $total = $query->count();
@@ -124,6 +121,7 @@ class CategoryNew extends BaseModel
             }else{
                 $result = $query->take($limit)->skip($offset)->get();
             }
+//            dd($query->toSql());
             return $result;
 
         }catch (PDOException $e){

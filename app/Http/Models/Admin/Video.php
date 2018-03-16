@@ -2,6 +2,7 @@
 namespace App\Http\Models\Admin;
 
 use App\Http\Models\BaseModel;
+use App\Library\AdminFunction\FunctionLib;
 use Illuminate\Support\Facades\DB;
 use App\library\AdminFunction\Define;
 use Illuminate\Support\Facades\Cache;
@@ -87,11 +88,20 @@ class Video extends BaseModel{
     public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
         try{
             $query = Video::where('video_id','>',0);
-            if (isset($dataSearch['role_name']) && $dataSearch['role_name'] != '') {
-                $query->where('role_name','LIKE', '%' . $dataSearch['role_name'] . '%');
+            if (isset($dataSearch['video_name']) && $dataSearch['video_name'] != '') {
+
+                $query->where('video_name','LIKE', '%' . $dataSearch['video_name'] . '%');
+            }
+            if (isset($dataSearch['video_sort_desc']) && $dataSearch['video_sort_desc'] != '') {
+
+                $query->where('video_sort_desc','LIKE', '%' . $dataSearch['video_sort_desc'] . '%');
+            }
+            if (isset($dataSearch['video_status']) && $dataSearch['video_status'] != -2) {
+
+                $query->where('video_status', $dataSearch['video_status'] );
             }
             $total = $query->count();
-            $query->orderBy('role_order', 'asc');
+            $query->orderBy('video_id', 'asc');
 
             $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',',trim($dataSearch['field_get'])): array();
             if($limit > 0){

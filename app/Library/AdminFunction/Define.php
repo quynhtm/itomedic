@@ -231,4 +231,30 @@ class Define
         self::Category_News_Product => 'Danh Mục Sản Phẩm',
         self::Category_News_Note => 'Danh Mục Ghi Chú',
     ];
+    const Banner_Page_Home = 1;
+    const Banner_Page_List = 2;
+    const Banner_Page_Detail = 3;
+    public static $arrBannerPage = [
+        self::Banner_Page_Home => 'Trang chủ',
+        self::Banner_Page_List => 'Danh sách',
+        self::Banner_Page_Detail => 'Chi tiết',
+    ];
+    const Banner_Type_Home = 1;
+    const Banner_Type_List = 2;
+    public static $arrBannerType = [
+        self::Banner_Type_Home => 'Trang chủ',
+        self::Banner_Type_List => 'Danh sách',
+    ];
+    const Banner_is_Target = 1;
+    const Banner_no_Target = 0;
+    public static $arrBannerTarget = [
+        self::Banner_is_Target => 'Mở tab mới',
+        self::Banner_no_Target => 'Không mở tab mới',
+    ];
+    const Banner_is_Run_Time = 1;
+    const Banner_no_Run_Time = 0;
+    public static $arrBannerRunTime = [
+        self::Banner_is_Run_Time => 'Chọn thời gian chạy',
+        self::Banner_no_Run_Time => 'Vĩnh viễn',
+    ];
 }
