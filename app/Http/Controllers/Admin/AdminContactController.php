@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\News;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseAdminController;
+use App\Http\Models\Admin\Contact;
+use App\Http\Models\Admin\Video;
 use App\Http\Models\News\CategoryNew;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\CGlobal;
@@ -12,13 +14,13 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use App\Library\AdminFunction\Pagging;
 
-class CategoryNewsController extends BaseAdminController
+class AdminContactController extends BaseAdminController
 {
-    private $permission_view = 'categoryNewView';
-    private $permission_full = 'categoryNewFull';
-    private $permission_delete = 'categoryNewDelete';
-    private $permission_create = 'categoryNewCreate';
-    private $permission_edit = 'categoryNewEdit';
+    private $permission_view = 'adminContactView';
+    private $permission_full = 'adminContactFull';
+    private $permission_delete = 'adminContactDelete';
+    private $permission_create = 'adminContactCreate';
+    private $permission_edit = 'adminContactEdit';
     private $arrStatus = array();
     private $error = array();
     private $arrayCategorySearch = [];
@@ -28,7 +30,7 @@ class CategoryNewsController extends BaseAdminController
     public function __construct()
     {
         parent::__construct();
-        CGlobal::$pageAdminTitle = 'Danh mục tin tức';
+        CGlobal::$pageAdminTitle = 'Danh mục Contact';
     }
 
     public function getDataDefault(){
@@ -58,30 +60,22 @@ class CategoryNewsController extends BaseAdminController
         $offset = ($pageNo - 1) * $limit;
         $search = $data = array();
         $total = 0;
-        $search['category_name'] = Request::get('category_name','');
-        $search['category_type'] = Request::get('category_type',0);
-        $search['category_status'] = Request::get('category_status',-2);
-        $search['category_order'] = Request::get('category_order','');
-        $search['active'] = (int)Request::get('active',-1);
-        //$search['field_get'] = 'menu_name,menu_id,parent_id';//cac truong can lay
+        $search['contact_title'] = Request::get('contact_title','');
+        $search['contact_content'] = Request::get('contact_content','');
+        $search['contact_user_name_send'] = Request::get('contact_user_name_send','');
 
-        $dataSearch = CategoryNew::searchByCondition($search, $limit, $offset,$total);
+        //$search['field_get'] = 'menu_name,menu_id,parent_id';//cac truong can lay
+        $dataSearch = Contact::searchByCondition($search, $limit, $offset,$total);
         $paging = $total > 0 ? Pagging::getNewPager(3,$pageNo,$total,$limit,$search) : '';
         $this->getDataDefault();
-        $optionStatus = FunctionLib::getOption($this->arrStatus, $search['category_status']);
-        $optionCategoryType = FunctionLib::getOption(array(0=>'--Chọn loại danh mục--')+Define::$arrCategoryType, $search['category_type']);
-
         $this->viewPermission = $this->getPermissionPage();
-        return view('news.CategoryNew.view',array_merge([
+        return view('admin.AdminContact.view',array_merge([
             'data'=>$dataSearch,
             'search'=>$search,
             'total'=>$total,
             'stt'=>($pageNo - 1) * $limit,
             'paging'=>$paging,
             'arrayStatus'=>$this->arrStatus,
-            'optionStatus'=>$optionStatus,
-            'optionCategoryType'=>$optionCategoryType,
-            'arrCategoryType'=>Define::$arrCategoryType,
         ],$this->viewPermission));
     }
 
@@ -93,21 +87,16 @@ class CategoryNewsController extends BaseAdminController
         }
         $data = array();
         if($id > 0) {
-            $data = CategoryNew::find($id);
+            $data = Contact::find($id);
         }
-
         $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['active'])? $data['active']: CGlobal::status_show);
-        $optionCategoryType = FunctionLib::getOption(Define::$arrCategoryType, isset($data['category_type'])? $data['category_type'] : Define::Category_News_Menu);
         $this->viewPermission = $this->getPermissionPage();
-        return view('news.CategoryNew.add',array_merge([
+        return view('admin.AdminContact.add',array_merge([
             'data'=>$data,
             'id'=>$id,
             'arrStatus'=>$this->arrStatus,
             'optionStatus'=>$optionStatus,
-            'optionCategoryType'=>$optionCategoryType,
-            'arrCategoryType'=>Define::$arrCategoryType,
-
         ],$this->viewPermission));
     }
 
@@ -119,53 +108,55 @@ class CategoryNewsController extends BaseAdminController
         $id_hiden = (int)Request::get('id_hiden', 0);
         $data = $_POST;
 //        FunctionLib::debug($data);
-        $data['category_order'] = (int)($data['category_order']);
 
         if($this->valid($data) && empty($this->error)) {
             $id = ($id == 0)?$id_hiden: $id;
             if($id > 0) {
                 //cap nhat
-                if(CategoryNew::updateItem($id, $data)) {
-                    return Redirect::route('admin.categoryNews');
+                if(Video::updateItem($id, $data)) {
+                    return Redirect::route('admin.contactView');
                 }
             }else{
                 //them moi
-                if(CategoryNew::createItem($data)) {
-                    return Redirect::route('admin.categoryNews');
+                if(Video::createItem($data)) {
+                    return Redirect::route('admin.contactView');
                 }
             }
         }
 
         $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['active'])? $data['active']: CGlobal::status_hide);
-        $optionCategoryType = FunctionLib::getOption(Define::$arrCategoryType, isset($data['category_type'])? $data['category_type'] : Define::Category_News_Menu);
         $this->viewPermission = $this->getPermissionPage();
-        return view('news.CategoryNew.add',array_merge([
+        return view('admin.AdminContact.add',array_merge([
             'data'=>$data,
             'id'=>$id,
             'error'=>$this->error,
             'arrStatus'=>$this->arrStatus,
             'optionStatus'=>$optionStatus,
-            'arrCategoryType'=>Define::$arrCategoryType,
-            'optionCategoryType'=>$optionCategoryType
         ],$this->viewPermission));
     }
 
-    public function deleteCategoryNews()
+    public function deleteContact()
     {
         $data = array('isIntOk' => 0);
         if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_delete,$this->permission)){
             return Response::json($data);
         }
         $id = (int)Request::get('id', 0);
-        if ($id > 0 && CategoryNew::deleteItem($id)) {
+        if ($id > 0 && Contact::deleteItem($id)) {
             $data['isIntOk'] = 1;
         }
         return Response::json($data);
     }
     private function valid($data=array()) {
         if(!empty($data)) {
-            if(isset($data['category_name']) && trim($data['category_name']) == '') {
+            if(isset($data['video_name']) && trim($data['video_name']) == '') {
+                $this->error[] = 'Null';
+            }
+            if(isset($data['video_link']) && trim($data['video_link']) == '') {
+                $this->error[] = 'Null';
+            }
+            if(isset($data['video_sort_desc']) && trim($data['video_sort_desc']) == '') {
                 $this->error[] = 'Null';
             }
         }
