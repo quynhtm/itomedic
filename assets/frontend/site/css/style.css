@@ -291,7 +291,7 @@ ul.top-right-info_w3ls {
 
 .navbar-default .navbar-toggle:hover,
 .navbar-default .navbar-toggle:focus {
-	background-color: #111;
+	background-color: #008427;
 }
 
 .navbar-default .navbar-toggle .icon-bar {
@@ -308,16 +308,16 @@ ul.top-right-info_w3ls {
 }
 
 .navbar-toggle {
-	position: relative;
-	float: right;
-	margin-right: 0;
-	padding: 9px 10px;
-	margin-top: 8px;
-	margin-bottom: 8px;
-	background-color: #282828;
-	background-image: none;
-	border: 1px solid transparent;
-	border-radius: 0;
+    position: relative;
+    display: none;
+    width: 44px;
+    height: 44px;
+    overflow: hidden;
+    white-space: nowrap;
+    color: transparent;
+    z-index: 3;
+    background: #e7e7e7;
+    border: 1px solid #ddd;
 }
 
 .navbar-default .navbar-nav>.active>a,
@@ -333,7 +333,8 @@ ul.top-right-info_w3ls {
 }
 
 .navbar-default .navbar-toggle {
-	border-color: #202020;
+	border-color: #008427;
+    border-left: 1px solid #fff;
 }
 
 .dropdown-menu .divider {
@@ -433,6 +434,19 @@ b.fa.fa-caret-right {
 		background: #eee;
 		margin-top: 1em;
 	}
+    .navbar-default{
+        background-color: #008427;
+        border-color: #fff;
+        padding: 2px;
+    }
+    .navbar-toggle{
+        display: block;
+        background: none;
+        border-radius: 0;
+    }
+    .cd-search-trigger, .cd-nav-trigger{
+        border-radius: 100%;
+    }
 }
 
 .cd-header-buttons {
@@ -458,8 +472,11 @@ b.fa.fa-caret-right {
 	z-index: 3;
 	background: #ffffff;
 	border: 1px solid #ddd;
+    top: 5px;
 }
-
+.footer-grid_w3ls_agile {
+    margin-bottom: 15px;
+}
 .cd-search-trigger::before,
 .cd-search-trigger::after {
 	/* search icon */
@@ -1338,6 +1355,11 @@ a.b-home {
     .thumbnail {
         height: auto;
     }
+    .navbar-default{
+        background-color: #008427;
+        border-color: #fff;
+        padding: 2px;
+    }
 }
 @media(max-width:600px) {
 	.error-404 h4 {
@@ -1355,6 +1377,11 @@ a.b-home {
     }
     .thumbnail {
         height: auto;
+    }
+    .navbar-default{
+        background-color: #008427;
+        border-color: #fff;
+        padding: 2px;
     }
 }
 @media(max-width:480px) {
@@ -1374,6 +1401,11 @@ a.b-home {
     }
     .thumbnail {
         height: auto;
+    }
+    .navbar-default{
+        background-color: #008427;
+        border-color: #fff;
+        padding: 2px;
     }
 }
 /*-- //error --*/
@@ -1778,7 +1810,7 @@ a.facebook:hover {
 }
 @media(max-width:900px){
 	.stats {
-		padding: 4em 2em;
+		padding: 3em 0em;
 		margin-top: 0em;
 		width: 100%;
 		float: none;
@@ -1851,8 +1883,8 @@ a.facebook:hover {
 }
 @media(max-width:767px){
 	.cd-header-buttons {
-		top: 11px;
-		left: 35px;
+        top: 18px;
+        left: 42px;
 	}
 	.cd-search input {
 		font-size: 1em;
@@ -2035,10 +2067,10 @@ a.facebook:hover {
 	.navbar-brand {
 		padding: 0 0px;
 	}
-	.cd-header-buttons {
-		top: 11px;
-		left: 6px;
-	}
+    .cd-header-buttons {
+        top: 18px;
+        left: 14px;
+    }
 	.banner-top, .banner-top1, .banner-top2, .banner-top3 {
 		min-height: 375px;
 	}
@@ -2536,4 +2568,7 @@ a.facebook:hover {
 .footer .container {
     max-width: 100%;
     width: 90%;
+}
+.img-responsive {
+    width: 100%;
 }
