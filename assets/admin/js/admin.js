@@ -99,10 +99,10 @@ var Admin = {
             $('#img_loading_' + id).show();
             var _token = $('input[name="_token"]').val();
             var url_ajax = '';
-            if (type == 1) { //xoa tin tức
+            if (type == 1) { //xoa danh mục tin tức
                 url_ajax = 'deleteCategoryNews';
-            } else if (type == 2) {
-                url_ajax = 'deleteCustomer';
+            } else if (type == 2) { // xóa tin tức và sản phẩm kiểu tin tức
+                url_ajax = 'deleteNews';
             } else if (type == 3) {
                 url_ajax = 'deleteBanner';
             } else if (type == 4) {

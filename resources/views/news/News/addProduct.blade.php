@@ -9,8 +9,8 @@
                 <i class="ace-icon fa fa-home home-icon"></i>
                 <a href="{{URL::route('admin.dashboard')}}">Home</a>
             </li>
-            <li><a href="{{URL::route('admin.newsView')}}"> Danh sách Tin tức</a></li>
-            <li class="active">@if($id > 0)Cập nhật tin tức @else Tạo mới tin tức @endif</li>
+            <li><a href="{{URL::route('admin.newsViewProduct')}}"> Danh sách sản phẩm</a></li>
+            <li class="active">@if($id > 0)Cập nhật sản phẩm @else Tạo mới sản phẩm @endif</li>
         </ul><!-- /.breadcrumb -->
     </div>
 
@@ -29,7 +29,7 @@
                 <div>
                     <div class="col-sm-9">
                         <div class="form-group">
-                            <label for="name" class="control-label">Tiêu đề tin<span class="red"> (*) </span></label>
+                            <label for="name" class="control-label">Tiêu đề <span class="red"> (*) </span></label>
                             <input type="text" placeholder="Tên bài viết" id="news_title" name="news_title"  class="form-control input-sm" value="@if(isset($data['news_title'])){{$data['news_title']}}@endif">
                         </div>
                     </div>
@@ -91,7 +91,7 @@
 
                     <div class="clearfix"></div>
                     <div class="form-group col-sm-12 text-left">
-                        <a class="btn btn-warning" href="{{URL::route('admin.newsView')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
+                        <a class="btn btn-warning" href="{{URL::route('admin.newsViewProduct')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
                         <button  class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('save')}}</button>
                     </div>
                     <input type="hidden" id="id_hiden" name="id_hiden" value="{{$id}}"/>

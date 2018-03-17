@@ -105,6 +105,9 @@ class News extends BaseModel
             if (isset($dataSearch['menu_name']) && $dataSearch['menu_name'] != '') {
                 $query->where('menu_name','LIKE', '%' . $dataSearch['menu_name'] . '%');
             }
+            if (isset($dataSearch['news_category']) && $dataSearch['news_category'] > 0) {
+                $query->where('news_category',$dataSearch['news_category']);
+            }
             $total = $query->count();
             $query->orderBy('news_id', 'desc');
 

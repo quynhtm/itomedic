@@ -9,7 +9,7 @@
                 <i class="ace-icon fa fa-home home-icon"></i>
                 <a href="{{URL::route('admin.dashboard')}}">Home</a>
             </li>
-            <li class="active">Quản lý tin tức</li>
+            <li class="active">Quản lý sản phẩm</li>
         </ul><!-- /.breadcrumb -->
     </div>
 
@@ -34,7 +34,7 @@
 
                         <div class="form-group col-lg-12 text-right">
                             @if($is_root || $permission_full ==1 || $permission_create == 1)
-                                <a class="btn btn-danger btn-sm" href="{{URL::route('admin.newsEdit',array('id' => FunctionLib::inputId(0)))}}">
+                                <a class="btn btn-danger btn-sm" href="{{URL::route('admin.newsEditProduct',array('id' => FunctionLib::inputId(0)))}}">
                                     <i class="ace-icon fa fa-plus-circle"></i>
                                     {{FunctionLib::viewLanguage('add')}}
                                 </a>
@@ -87,7 +87,7 @@
 
                                 <td class="text-center text-middle">
                                     @if($is_root || $permission_full ==1|| $permission_edit ==1  )
-                                        <a href="{{URL::route('admin.newsEdit',array('id' => FunctionLib::inputId($item['news_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
+                                        <a href="{{URL::route('admin.newsEditProduct',array('id' => FunctionLib::inputId($item['news_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
                                     @endif
                                     @if($is_boss)
                                         <a href="javascript:void(0);" onclick="Admin.deleteItem({{$item['news_id']}},2)" title="Xóa Item"><i class="fa fa-trash fa-2x"></i></a>
