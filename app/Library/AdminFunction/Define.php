@@ -34,6 +34,7 @@ class Define
     const TABLE_WEB_CONTACT = 'web_contact';
     const TABLE_WEB_NEW = 'web_news';
     const TABLE_WEB_VIDEO = 'web_video';
+    const TABLE_WEB_INFO = 'web_info';
 
 
     /***************************************************************************************************************
@@ -271,4 +272,8 @@ class Define
         self::Banner_is_Run_Time => 'Chọn thời gian chạy',
         self::Banner_no_Run_Time => 'Vĩnh viễn',
     ];
+
+    //InfoSite
+    const INFO_FOOTER = 1;
+    const INFO_CONTACT = 2;
 }
