@@ -22,24 +22,29 @@
                     <h2 class="title_footer">Bài viết mới</h2>
                 </div>
                 <div class="footer-list">
-                    <div class="flickr-grid">
-                        <a href="../single.html"><img src="images/b1.jpg" alt=" " ></a>
-                    </div>
-                    <div class="flickr-grid">
-                        <a href="#"><img src="images/b2.jpg" alt=" "></a>
-                    </div>
-                    <div class="flickr-grid">
-                        <a href="#"><img src="images/b3.jpg" alt=" " ></a>
-                    </div>
-                    <div class="flickr-grid">
-                        <a href="#"><img src="images/b4.jpg" alt=" "></a>
-                    </div>
-                    <div class="flickr-grid">
-                        <a href="#"><img src="images/b1.jpg" alt=" "></a>
-                    </div>
-                    <div class="flickr-grid">
-                        <a href="#"><img src="images/b2.jpg" alt=" "></a>
-                    </div>
+                    <ul class="post-list">
+                        <li>
+                            <figure>
+                                <img src="http://itomedic.com/wp-content/uploads/bfi_thumb/images-331obq0nsrdoey4v5xa5mo.jpg" alt="Nhận biết và điều trị rách sụn chêm khớp gối">
+                                <a href="http://itomedic.com/lien-doan-bong-da-brazil-dau-tu-thiet-bi-vat-ly-tri-lieu-dieu-tri-cho-cac-van-dong-vien/" class="post-title">
+                                    LIÊN ĐOÀN BÓNG ĐÁ BRAZIL ĐẦU TƯ THIẾT BỊ VẬT LÝ TRỊ LIỆU ĐIỀU TRỊ CHO CÁC VẬN ĐỘNG VIÊN									</a>
+                            </figure>
+                        </li>
+                        <li>
+                            <figure>
+                                <img src="http://itomedic.com/wp-content/uploads/bfi_thumb/images-331obq0nsrdoey4v5xa5mo.jpg" alt="Nhận biết và điều trị rách sụn chêm khớp gối">
+                                <a href="http://itomedic.com/nhan-biet-va-dieu-tri-rach-sun-chem-khop-goi/" class="post-title">
+                                    Nhận biết và điều trị rách sụn chêm khớp gối									</a>
+                            </figure>
+                        </li>
+                        <li>
+                            <figure>
+                                <img src="http://itomedic.com/wp-content/uploads/bfi_thumb/phong-khasm-1-330ulxduj9g9hit50isfls.jpg" alt="Chào mừng bạn đến với trung tâm ITOMEDIC">
+                                <a href="http://itomedic.com/welcome-to-itomedic-center/" class="post-title">
+                                    Chào mừng bạn đến với trung tâm ITOMEDIC									</a>
+                            </figure>
+                        </li>
+                    </ul>
                     <div class="clearfix"></div>
                 </div>
             </div>
