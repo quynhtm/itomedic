@@ -66,9 +66,17 @@
                             <tr @if($item['parent_id'] == 0)style="background-color:#d6f6f6"@endif>
                                 <td class="text-center text-middle">{!! $stt + $key+1 !!}</td>
                                 <td></td>
-                                <td class="text-center text-middle">{!! $item['news_title'] !!}</td>
-                                <td class="text-center text-middle">{!! $item['news_category'] !!}</td>
-                                <td class="text-center text-middle">{!! $item['news_type'] !!}</td>
+                                <td>{!! $item['news_title'] !!}</td>
+                                <td class="text-center text-middle">
+                                    @if(isset($arrCategoryNew[$item['news_category']]))
+                                        {{$arrCategoryNew[$item['news_category']]}}
+                                    @endif
+                                </td>
+                                <td class="text-center text-middle">
+                                    @if(isset($arrTypeNews[$item['news_type']]))
+                                        {{$arrTypeNews[$item['news_type']]}}
+                                    @endif
+                                </td>
                                 <td class="text-center text-middle">
                                     @if($item['news_status'] == 1)
                                         <a href="javascript:void(0);" title="Hiện"><i class="fa fa-check fa-2x"></i></a>
