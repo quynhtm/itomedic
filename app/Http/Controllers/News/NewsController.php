@@ -32,6 +32,7 @@ class NewsController extends BaseAdminController
     private $arrStatus = array();
     private $arrTypeNews = array();
     private $arrCategoryNew = array();
+    private $arrCategoryNewProduct = array();
     private $error = array();
     private $viewPermission = array();//check quyen
 
@@ -50,6 +51,7 @@ class NewsController extends BaseAdminController
 
         $this->arrTypeNews = Define::$arrTypeNews;
         $this->arrCategoryNew = CategoryNew::getCategoryNews();
+        $this->arrCategoryNewProduct = CategoryNew::getCategoryProduct();
     }
 
     public function getPermissionPage()
@@ -249,7 +251,7 @@ class NewsController extends BaseAdminController
         $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['news_status']) ? $data['news_status'] : CGlobal::status_show);
         $optionType = FunctionLib::getOption($this->arrTypeNews, isset($data['news_type']) ? $data['news_type'] : Define::news_type_product);
-        $optionCategoryNew = FunctionLib::getOption($this->arrCategoryNew, isset($data['news_category']) ? $data['news_category'] : CGlobal::status_hide);
+        $optionCategoryNew = FunctionLib::getOption($this->arrCategoryNewProduct, isset($data['news_category']) ? $data['news_category'] : CGlobal::status_hide);
 
         $this->viewPermission = $this->getPermissionPage();
         return view('news.News.addProduct', array_merge([
@@ -294,7 +296,7 @@ class NewsController extends BaseAdminController
         $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['news_status']) ? $data['news_status'] : CGlobal::status_show);
         $optionType = FunctionLib::getOption($this->arrTypeNews, isset($data['news_type']) ? $data['news_type'] : Define::news_type_product);
-        $optionCategoryNew = FunctionLib::getOption($this->arrCategoryNew, isset($data['news_category']) ? $data['news_category'] : CGlobal::status_hide);
+        $optionCategoryNew = FunctionLib::getOption($this->arrCategoryNewProduct, isset($data['news_category']) ? $data['news_category'] : CGlobal::status_hide);
 
         $this->viewPermission = $this->getPermissionPage();
         return view('news.News.addProduct', array_merge([

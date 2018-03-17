@@ -67,6 +67,7 @@ class Define
 
     //danh mục tin tức
     const CACHE_CATEGORY_NEWS = 'cache_category_news';
+    const CACHE_CATEGORY_PRODUCT = 'cache_category_product';
     //Hr nhân sự
     const CACHE_PERSON = 'cache_info_person_id_';
 

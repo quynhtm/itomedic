@@ -148,4 +148,22 @@ class CategoryNew extends BaseModel
         }
         return $data;
     }
+    public static function getCategoryProduct(){
+        $data = Cache::get(Define::CACHE_CATEGORY_PRODUCT);
+        if (sizeof($data) == 0) {
+            $result = CategoryNew::where('category_id', '>', 0)
+                ->whereIn('category_type',array(Define::Category_News_Product))
+                ->where('category_status',Define::STATUS_SHOW)
+                ->orderBy('category_order','asc')->get();
+            if($result){
+                foreach($result as $itm) {
+                    $data[$itm['category_id']] = $itm['category_name'];
+                }
+            }
+            if(!empty($data)){
+                Cache::put(Define::CACHE_CATEGORY_PRODUCT, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
+        }
+        return $data;
+    }
 }
