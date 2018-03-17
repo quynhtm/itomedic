@@ -87,14 +87,10 @@ class InfoSite extends BaseModel{
     public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
         try{
             $query = InfoSite::where('info_id','>',0);
-            if (isset($dataSearch['banner_name']) && $dataSearch['banner_name'] != '') {
-                $query->where('banner_name','LIKE', '%' . $dataSearch['banner_name'] . '%');
-            }if (isset($dataSearch['banner_page']) && $dataSearch['banner_page'] > 0) {
-                $query->where('banner_page', $dataSearch['banner_page'] );
-            }if (isset($dataSearch['banner_status']) && $dataSearch['banner_status'] != -2) {
-                $query->where('banner_status', $dataSearch['banner_status'] );
-            }if (isset($dataSearch['banner_type']) && $dataSearch['banner_type'] >0 ) {
-                $query->where('banner_type',$dataSearch['banner_type']);
+            if (isset($dataSearch['info_title']) && $dataSearch['info_title'] != '') {
+                $query->where('info_title','LIKE', '%' . $dataSearch['info_title'] . '%');
+            }if (isset($dataSearch['info_status']) && $dataSearch['info_status'] != -2) {
+                $query->where('info_status', $dataSearch['info_status'] );
             }
             $total = $query->count();
             $query->orderBy('info_id', 'asc');

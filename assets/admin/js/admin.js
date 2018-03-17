@@ -127,8 +127,9 @@ var Admin = {
                 url_ajax = 'deleteBanner';
             }else if (type == 18) { //xoa contact
                 url_ajax = 'deleteContact';
+            }else if (type == 19) { //xoa info
+                url_ajax = 'deleteInfo';
             }
-
             if (url_ajax != '') {
                 $.ajax({
                     type: "post",

@@ -34,3 +34,10 @@ Route::get('contact/view',array('as' => 'admin.contactView','uses' => Admin.'\Ad
 Route::get('contact/edit/{id?}', array('as' => 'admin.contactEdit','uses' => Admin.'\AdminContactController@getItem'));
 Route::post('contact/edit/{id?}', array('as' => 'admin.contactEdit','uses' => Admin.'\AdminContactController@postItem'));
 Route::post('contact/deleteContact', array('as' => 'admin.deleteContact','uses' => Admin.'\AdminContactController@deleteContact'));//ajax
+
+/*thong tin chung*/
+
+Route::get('info/view',array('as' => 'admin.infoView','uses' => Admin.'\AdminInfoController@view'));
+Route::get('info/edit/{id?}', array('as' => 'admin.infoEdit','uses' => Admin.'\AdminInfoController@getItem'));
+Route::post('info/edit/{id?}', array('as' => 'admin.infoEdit','uses' => Admin.'\AdminInfoController@postItem'));
+Route::post('info/deleteInfo', array('as' => 'admin.deleteInfo','uses' => Admin.'\AdminInfoController@deleteInfo'));//ajax
