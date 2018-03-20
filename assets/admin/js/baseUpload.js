@@ -5,6 +5,7 @@
         jQuery('.ajax-upload-dragdrop').remove();
         var urlAjaxUpload = WEB_ROOT+'/ajax/upload?act=upload_image';
         var id_hiden = document.getElementById('id_hiden').value;
+
         var _token = $('meta[name="csrf-token"]').val();
         var settings = {
             url: urlAjaxUpload,

@@ -8,6 +8,7 @@ use App\Http\Models\News\News;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\CGlobal;
 use App\Library\AdminFunction\Define;
+use App\Library\AdminFunction\Loader;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
@@ -88,6 +89,12 @@ class NewsController extends BaseAdminController
         if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
+
+        Loader::loadCSS('lib/upload/cssUpload.css', CGlobal::$POS_HEAD);
+        Loader::loadJS('lib/upload/jquery.uploadfile.js', CGlobal::$POS_END);
+        Loader::loadJS('admin/js/baseUpload.js', CGlobal::$POS_END);
+        Loader::loadJS('lib/dragsort/jquery.dragsort.js', CGlobal::$POS_HEAD);
+
         $data = array();
         if($id > 0) {
             $data = News::find($id);
@@ -98,7 +105,10 @@ class NewsController extends BaseAdminController
         $optionShowPermission = FunctionLib::getOption($this->arrStatus, isset($data['show_permission'])? $data['show_permission']: CGlobal::status_hide);
         $optionShowMenu = FunctionLib::getOption($this->arrStatus, isset($data['show_menu'])? $data['show_menu']: CGlobal::status_show);
 
+        $optionCategory = FunctionLib::getOption($this->arrCategoryNew, isset($data['news_category'])? $data['news_category'] : CGlobal::status_hide);
+
         $this->viewPermission = $this->getPermissionPage();
+
         return view('news.News.add',array_merge([
             'data'=>$data,
             'id'=>$id,
@@ -107,6 +117,7 @@ class NewsController extends BaseAdminController
             'optionShowContent'=>$optionShowContent,
             'optionShowPermission'=>$optionShowPermission,
             'optionShowMenu'=>$optionShowMenu,
+            'optionCategory'=>$optionCategory,
         ],$this->viewPermission));
     }
 

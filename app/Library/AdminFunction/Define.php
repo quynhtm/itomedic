@@ -80,6 +80,7 @@ class Define
     const CACHE_HR_MAIL_ID = 'cache_hr_mail_id_';
     const CACHE_CATEGORY_ID = 'cache_category_id_';
     const CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID = 'cache_all_child_category_by_parent_id_';
+    const CACHE_NEWS_ID = 'cache_news_id_';
     /***************************************************************************************************************
      * //Define
      ***************************************************************************************************************/
@@ -208,6 +209,7 @@ class Define
     const FOLDER_DEVICE = 'device';
     const FOLDER_DOCUMENT = 'document';
     const FOLDER_MAIL = 'mail';
+    const FOLDER_NEWS = 'news';
 
     const sizeImage_80 = 80;
     const sizeImage_100 = 100;
@@ -223,6 +225,7 @@ class Define
         self::sizeImage_300 => array('w' => self::sizeImage_300, 'h' => self::sizeImage_300),
         self::sizeImage_450 => array('w' => self::sizeImage_450, 'h' => self::sizeImage_450),
     );
+
     const Category_News_Menu = 1;
     const Category_News_News = 2;
     const Category_News_Product = 3;

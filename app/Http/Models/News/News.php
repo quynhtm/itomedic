@@ -41,7 +41,20 @@ class News extends BaseModel
             throw new PDOException();
         }
     }
-
+    public static function getItemById($id=0){
+        $result = (Define::CACHE_ON) ? Cache::get(Define::CACHE_NEWS_ID . $id) : array();
+        try {
+            if (empty($result)) {
+                $result = News::where('news_id', $id)->first();
+                if ($result && Define::CACHE_ON) {
+                    Cache::put(Define::CACHE_NEWS_ID . $id, $result, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+                }
+            }
+        } catch (PDOException $e) {
+            throw new PDOException();
+        }
+        return $result;
+    }
     public static function updateItem($id,$data){
         try {
             DB::connection()->getPdo()->beginTransaction();
@@ -95,7 +108,7 @@ class News extends BaseModel
 
     public static function removeCache($id = 0,$data){
         if($id > 0){
-            //Cache::forget(Define::CACHE_CATEGORY_ID.$id);
+            Cache::forget(Define::CACHE_NEWS_ID.$id);
         }
     }
 

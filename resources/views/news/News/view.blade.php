@@ -52,23 +52,21 @@
                     <table class="table table-bordered table-hover">
                         <thead class="thin-border-bottom">
                         <tr class="">
-                            <th width="5%" class="text-center">TT</th>
-                            <th width="10%">Ảnh</th>
-                            <th width="35%">Tiêu đề</th>
-                            <th width="15%" class="text-center">Thuộc danh mục</th>
-                            <th width="15%" class="text-center">Loại tin</th>
+                            <th class="text-center text-middle" width="2%" class="text-center">TT</th>
+                            <th class="text-center text-middle" width="8%">Ảnh</th>
+                            <th class="text-center text-middle" width="25%">Tiêu đề</th>
+                            <th width="15%" class="text-center">Danh mục</th>
                             <th width="10%" class="text-center">Trạng thái</th>
                             <th width="10%" class="text-center">Action</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach ($data as $key => $item)
-                            <tr @if($item['parent_id'] == 0)style="background-color:#d6f6f6"@endif>
+                            <tr>
                                 <td class="text-center text-middle">{!! $stt + $key+1 !!}</td>
-                                <td></td>
-                                <td class="text-center text-middle">{!! $item['news_title'] !!}</td>
-                                <td class="text-center text-middle">{!! $item['news_category'] !!}</td>
-                                <td class="text-center text-middle">{!! $item['news_type'] !!}</td>
+                                <td class="text-center text-middle"></td>
+                                <td class="text-middle" >{!! $item['news_title'] !!}</td>
+                                <td class="text-middle">{!! $item['news_category'] !!}</td>
                                 <td class="text-center text-middle">
                                     @if($item['news_status'] == 1)
                                         <a href="javascript:void(0);" title="Hiện"><i class="fa fa-check fa-2x"></i></a>

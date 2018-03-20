@@ -10,6 +10,8 @@ namespace App\Http\Controllers;
 use App\Http\Models\Hr\Device;
 use App\Http\Models\Hr\HrDocument;
 use App\Http\Models\Hr\HrMail;
+use App\Http\Models\News\News;
+use App\Library\AdminFunction\CGlobal;
 use App\Library\AdminFunction\Define;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\Upload;
@@ -54,10 +56,12 @@ class AjaxUploadController extends BaseAdminController{
 		$aryData['intIsOK'] = -1;
 		$aryData['msg'] = "Data not exists!";
 
-
 		switch( $type ){
 			case 1 ://Img device
 				$aryData = $this->uploadImageToFolderOnce($dataImg, $id_hiden, Define::FOLDER_DEVICE, $type);
+				break;
+			case 2 ://Img News
+				$aryData = $this->uploadImageToFolder($dataImg, $id_hiden, Define::FOLDER_NEWS, $type);
 				break;
 			default:
 				break;
@@ -146,15 +150,13 @@ class AjaxUploadController extends BaseAdminController{
 		$aryData['intIsOK'] = -1;
 		$aryData['msg'] = "Upload Img!";
 		$item_id = 0;
-
 		if (!empty($dataImg)) {
-
 			if($id_hiden == 0){
 				switch($type){
 					case 2://Img News
-						$new_row['news_created'] = time();
-						$new_row['news_status'] = CGlobal::IMAGE_ERROR;
-						$item_id = News::addData($new_row);
+						$new_row['news_create'] = time();
+						$new_row['news_status'] = Define::IMAGE_ERROR;
+						$item_id = News::createItem($new_row);
 						break;
 					default:
 						break;
@@ -169,7 +171,7 @@ class AjaxUploadController extends BaseAdminController{
 				$file_name = Upload::uploadFile('multipleFile',
 					$_file_ext = 'jpg,jpeg,png,gif',
 					$_max_file_size = 10*1024*1024,
-					$_folder = $folder.'/'.$item_id,
+					$folder = $folder.'/'.$item_id,
 					$type_json=0);
 
 				if ($file_name != '' && empty($aryError)){
@@ -179,28 +181,24 @@ class AjaxUploadController extends BaseAdminController{
 
 					switch($type){
 						case 2://Img News
-							$result = News::getById($item_id);
+							$result = News::getItemById($item_id);
 							if($result != null){
 								$aryTempImages = ($result->news_image_other != '') ? unserialize($result->news_image_other) : array();
-
 								$aryTempImages[] = $file_name;
-
 								$new_row['news_image_other'] = serialize($aryTempImages);
-								News::updateData($item_id, $new_row);
+								News::updateItem($item_id, $new_row);
 
-								$path_image = $file_name;
-
-								$arrSize = CGlobal::$arrSizeImg;
-								if(isset($arrSize['4'])){
-									$size = explode('x', $arrSize['4']);
+								$arrSize = Define::$arrSizeImage;
+								if(isset($arrSize[Define::sizeImage_300])){
+									$size = $arrSize[Define::sizeImage_300];
 									if(!empty($size)){
-										$x = (int)$size[0];
-										$y = (int)$size[1];
+										$x = (int)$size['w'];
+										$y = (int)$size['h'];
 									}else{
-										$x = $y = 400;
+										$x = $y = Define::sizeImage_300;
 									}
 								}
-								$url_thumb = ThumbImg::thumbBaseNormal(CGlobal::FOLDER_NEWS, $item_id, $file_name, $x, $y, '', true, true);
+								$url_thumb = ThumbImg::thumbBaseNormal($folder, $file_name, $x, $y, '', true, true);
 								$tmpImg['src'] = $url_thumb;
 							}
 							break;
@@ -209,7 +207,7 @@ class AjaxUploadController extends BaseAdminController{
 					}
 
 					$aryData['intIsOK'] = 1;
-					$aryData['id_item'] = $item_id;
+					$aryData['id_item'] = FunctionLib::inputId($item_id);
 					$aryData['info'] = $tmpImg;
 				}
 			}
@@ -415,7 +413,7 @@ class AjaxUploadController extends BaseAdminController{
 	//Get Img Content
 	function get_image_insert_content(){
 
-		$id_hiden = (int)Request::get('id_hiden', 0);
+		$id_hiden =  FunctionLib::outputId(Request::get('id_hiden', 0));
 		$type = (int)Request::get('type', 1);
 		$aryData = array();
 		$aryData['intIsOK'] = -1;
@@ -424,7 +422,7 @@ class AjaxUploadController extends BaseAdminController{
 		if($id_hiden > 0){
 			switch( $type ){
 				case 2://Img News
-					$aryData = $this->getImgContent($id_hiden, CGlobal::FOLDER_NEWS, $type);
+					$aryData = $this->getImgContent($id_hiden, Define::FOLDER_NEWS, $type);
 					break;
 				default:
 					break;
@@ -439,8 +437,8 @@ class AjaxUploadController extends BaseAdminController{
 		$aryData = array();
 
 		switch( $type ){
-			case 2://Img device
-				$result = News::getById($id_hiden);
+			case 2://Img News
+				$result = News::getItemById($id_hiden);
 				if($result != null){
 					$aryImages = ($result->news_image_other != '') ? unserialize($result->news_image_other) : array();
 				}
