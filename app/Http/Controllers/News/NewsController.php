@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\News;
 
 use App\Http\Controllers\BaseAdminController;
+use App\Http\Models\News\CategoryNew;
 use App\Http\Models\News\News;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\CGlobal;
@@ -20,13 +21,15 @@ class NewsController extends BaseAdminController
     private $permission_create = 'newsCreate';
     private $permission_edit = 'newsEdit';
     private $arrStatus = array();
+    private $arrCategoryNew = array();
     private $error = array();
     private $viewPermission = array();//check quyen
 
-    public function __construct()
-    {
+    public function __construct(){
         parent::__construct();
         CGlobal::$pageAdminTitle = 'Quản lý Tin tức';
+
+        $this->arrCategoryNew = CategoryNew::getAllParentCategoryId();
     }
 
     public function getDataDefault(){

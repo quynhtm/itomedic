@@ -10,7 +10,7 @@
                 <a href="{{URL::route('admin.dashboard')}}">Home</a>
             </li>
             <li><a href="{{URL::route('admin.newsView')}}"> Danh sách Tin tức</a></li>
-            <li class="active">@if($id > 0)Cập nhật tin tức @else Tạo mới tin tức@endif</li>
+            <li class="active">@if($id > 0)Cập nhật tin tức @else Tạo mới tin tức @endif</li>
         </ul><!-- /.breadcrumb -->
     </div>
 
@@ -38,7 +38,7 @@
                             <label for="name" class="control-label">Thuộc danh mục</label>
                             <select name="news_category" id="news_category" class="form-control input-sm">
                                 <option value="0">--- Chọn danh mục ---</option>
-                                {!! $optionStatus !!}}
+                                {!! $optionCategory !!}}
                             </select>
                         </div>
                     </div>

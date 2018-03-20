@@ -5,6 +5,7 @@
 namespace App\Http\Models\News;
 use App\Http\Models\BaseModel;
 
+use App\Library\AdminFunction\CGlobal;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use App\library\AdminFunction\Define;
@@ -95,8 +96,12 @@ class CategoryNew extends BaseModel
 
     public static function removeCache($id = 0,$data){
         if($id > 0){
-            //Cache::forget(Define::CACHE_CATEGORY_ID.$id);
+            Cache::forget(Define::CACHE_CATEGORY_ID.$id);
         }
+        Cache::forget(Define::CACHE_ALL_PARENT_CATEGORY);
+        Cache::forget(Define::CACHE_ALL_PARENT_CATEGORY.'_'.$data->category_type);
+        Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$data->category_parent_id);
+
     }
 
     public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
@@ -121,11 +126,141 @@ class CategoryNew extends BaseModel
             }else{
                 $result = $query->take($limit)->skip($offset)->get();
             }
-//            dd($query->toSql());
+            //dd($query->toSql());
             return $result;
 
         }catch (PDOException $e){
             throw new PDOException();
         }
     }
+    public static function getOptionAllCategory() {
+        $data = array();
+        $category = CategoryNew::where('category_id','>',0)->orderBy('category_id','asc')->get();
+        foreach($category as $itm) {
+            $data[$itm['category_id']] = $itm['category_name'];
+        }
+        return $data;
+    }
+    public static function getAllParentCategoryId() {
+        $data = (Define::CACHE_ON)? Cache::get(Define::CACHE_ALL_PARENT_CATEGORY) : array();
+        if (sizeof($data) == 0) {
+            $category = CategoryNew::where('category_id', '>', 0)
+                ->where('category_parent_id',0)
+                ->where('category_status',CGlobal::status_show)
+                ->orderBy('category_order','asc')->get();
+            if($category){
+                foreach($category as $itm) {
+                    $data[$itm['category_id']] = $itm['category_name'];
+                }
+            }
+            if($data && Define::CACHE_ON){
+                Cache::put(Define::CACHE_ALL_PARENT_CATEGORY, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
+        }
+        return $data;
+    }
+    public static function getAllParentCateWithType($category_type) {
+        $data = (Define::CACHE_ON)? Cache::get(Define::CACHE_ALL_PARENT_CATEGORY.'_'.$category_type) : array();
+        if (sizeof($data) == 0) {
+            $category = CategoryNew::where('category_id', '>', 0)
+                ->where('category_parent_id',0)
+                ->where('category_status',CGlobal::status_show)
+                ->where('category_type',$category_type)
+                ->orderBy('category_order','asc')->get();
+            if($category){
+                foreach($category as $itm) {
+                    $data[$itm['category_id']] = $itm['category_name'];
+                }
+            }
+            if($data && Define::CACHE_ON){
+                Cache::put(Define::CACHE_ALL_PARENT_CATEGORY.'_'.$category_type, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
+        }
+        return $data;
+    }
+    public static function getAllChildCategoryIdByParentId($parentId = 0) {
+        $data = (Memcache::CACHE_ON)? Cache::get(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$parentId) : array();
+        if (sizeof($data) == 0 && $parentId > 0) {
+            $category = CategoryNew::where('category_id' ,'>', 0)
+                ->where('category_parent_id','=',$parentId)
+                ->where('category_status',CGlobal::status_show)
+                ->orderBy('category_order','asc')->get();
+            if($category){
+                foreach($category as $itm) {
+                    $data[$itm['category_id']] = $itm['category_name'];
+                }
+            }
+            if($data && Define::CACHE_ON){
+                Cache::put(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$parentId, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
+        }
+        return $data;
+    }
+    public static function buildTreeCategory($category_type = 0){
+        if($category_type > 0){
+            $categories = CategoryNew::where('category_id', '>', 0)
+                ->where('category_status', '=', CGlobal::status_show)
+                ->where('category_type', '=', $category_type)
+                ->get();
+        }else{
+            $categories = CategoryNew::where('category_id', '>', 0)
+                ->where('category_status', '=', CGlobal::status_show)
+                ->get();
+        }
+        return $treeCategroy = self::getTreeCategory($categories);
+    }
+    public static function getTreeCategory($data){
+        $max = 0;
+        $aryCategoryProduct = $arrCategory = array();
+        if(!empty($data)){
+            foreach ($data as $k=>$value){
+                $max = ($max < $value->category_parent_id)? $value->category_parent_id : $max;
+                $arrCategory[$value->category_id] = array(
+                    'category_id'=>$value->category_id,
+                    'category_depart_id'=>$value->category_depart_id,
+                    'category_parent_id'=>$value->category_parent_id,
+                    'category_type'=>$value->category_type,
+                    'category_level'=>$value->category_level,
+                    'category_image_background'=>$value->category_image_background,
+                    'category_icons'=>$value->category_icons,
+                    'category_order'=>$value->category_order,
+                    'category_status'=>$value->category_status,
+                    'category_menu_status'=>$value->category_menu_status,
+                    'category_name'=>$value->category_name,
+                    'category_menu_right'=>$value->category_menu_right);
+            }
+        }
+
+        if($max > 0){
+            $aryCategoryProduct = self::showCategory($max, $arrCategory);
+        }
+        return $aryCategoryProduct;
+    }
+    public static function showCategory($max, $aryDataInput) {
+        $aryData = array();
+        if(is_array($aryDataInput) && count($aryDataInput) > 0) {
+            foreach ($aryDataInput as $k => $val) {
+                if((int)$val['category_parent_id'] == 0) {
+                    $val['padding_left'] = '';
+                    $val['category_parent_name'] = '';
+                    $aryData[] = $val;
+                    self::showSubCategory($val['category_id'],$val['category_name'], $max, $aryDataInput, $aryData);
+                }
+            }
+        }
+        return $aryData;
+    }
+    public static function showSubCategory($cat_id,$cat_name, $max, $aryDataInput, &$aryData) {
+        if($cat_id <= $max) {
+            foreach ($aryDataInput as $chk => $chval) {
+                if($chval['category_parent_id'] == $cat_id) {
+                    $chval['padding_left'] = '--- ';
+                    $chval['category_parent_name'] = $cat_name;
+                    $aryData[] = $chval;
+                    self::showSubCategory($chval['category_id'],$chval['category_name'], $max, $aryDataInput, $aryData);
+                }
+            }
+        }
+    }
+
 }
