@@ -1,31 +1,26 @@
 <?php
-/**
- * QuynhTM
- */
-namespace App\Http\Models\News;
-use App\Http\Models\BaseModel;
+namespace App\Http\Models\Admin;
 
-use Illuminate\Support\Facades\Cache;
+use App\Http\Models\BaseModel;
 use Illuminate\Support\Facades\DB;
 use App\library\AdminFunction\Define;
-use App\Library\AdminFunction\FunctionLib;
+use Illuminate\Support\Facades\Cache;
 
-class News extends BaseModel
-{
-    protected $table = Define::TABLE_WEB_NEW;
-    protected $primaryKey = 'news_id';
+class InfoSite extends BaseModel{
+    protected $table = Define::TABLE_WEB_INFO;
+    protected $primaryKey = 'info_id';
     public $timestamps = false;
 
-    protected $fillable = array('news_title', 'news_desc_sort', 'news_content', 'news_image', 'news_image_other',
-        'news_type', 'news_category','news_category_name','news_status'
-    ,'news_hot','meta_title','meta_keywords','meta_description ','news_create','news_user_create','news_update','news_user_update');
+    protected $fillable = array('info_title', 'info_keyword', 'info_intro',
+        'info_content', 'info_img', 'info_created', 'info_order', 'info_status', 'meta_title',
+        'meta_keywords','meta_description');
 
     public static function createItem($data){
         try {
             DB::connection()->getPdo()->beginTransaction();
-            $checkData = new News();
+            $checkData = new InfoSite();
             $fieldInput = $checkData->checkField($data);
-            $item = new News();
+            $item = new InfoSite();
             if (is_array($fieldInput) && count($fieldInput) > 0) {
                 foreach ($fieldInput as $k => $v) {
                     $item->$k = $v;
@@ -34,39 +29,25 @@ class News extends BaseModel
             $item->save();
 
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->news_id,$item);
-            return $item->news_id;
+            self::removeCache($item->info_id,$item);
+            return $item->info_id;
         } catch (PDOException $e) {
             DB::connection()->getPdo()->rollBack();
             throw new PDOException();
         }
     }
-    public static function getItemById($id=0){
-        $result = (Define::CACHE_ON) ? Cache::get(Define::CACHE_NEWS_ID . $id) : array();
-        try {
-            if (empty($result)) {
-                $result = News::where('news_id', $id)->first();
-                if ($result && Define::CACHE_ON) {
-                    Cache::put(Define::CACHE_NEWS_ID . $id, $result, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
-                }
-            }
-        } catch (PDOException $e) {
-            throw new PDOException();
-        }
-        return $result;
-    }
     public static function updateItem($id,$data){
         try {
             DB::connection()->getPdo()->beginTransaction();
-            $checkData = new News();
+            $checkData = new InfoSite();
             $fieldInput = $checkData->checkField($data);
-            $item = News::find($id);
+            $item = InfoSite::find($id);
             foreach ($fieldInput as $k => $v) {
                 $item->$k = $v;
             }
             $item->update();
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->news_id,$item);
+            self::removeCache($item->info_id,$item);
             return true;
         } catch (PDOException $e) {
             //var_dump($e->getMessage());
@@ -74,7 +55,6 @@ class News extends BaseModel
             throw new PDOException();
         }
     }
-
     public function checkField($dataInput) {
         $fields = $this->fillable;
         $dataDB = array();
@@ -87,17 +67,16 @@ class News extends BaseModel
         }
         return $dataDB;
     }
-
     public static function deleteItem($id){
         if($id <= 0) return false;
         try {
             DB::connection()->getPdo()->beginTransaction();
-            $item = News::find($id);
+            $item = InfoSite::find($id);
             if($item){
                 $item->delete();
             }
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->news_id,$item);
+            self::removeCache($item->info_id,$item);
             return true;
         } catch (PDOException $e) {
             DB::connection()->getPdo()->rollBack();
@@ -105,36 +84,59 @@ class News extends BaseModel
             return false;
         }
     }
-
-    public static function removeCache($id = 0,$data){
-        if($id > 0){
-            Cache::forget(Define::CACHE_NEWS_ID.$id);
-        }
-    }
-
     public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
         try{
-            $query = News::where('news_id','>',0);
-            if (isset($dataSearch['menu_name']) && $dataSearch['menu_name'] != '') {
-                $query->where('menu_name','LIKE', '%' . $dataSearch['menu_name'] . '%');
-            }
-            if (isset($dataSearch['news_category']) && $dataSearch['news_category'] > 0) {
-                $query->where('news_category',$dataSearch['news_category']);
+            $query = InfoSite::where('info_id','>',0);
+            if (isset($dataSearch['info_title']) && $dataSearch['info_title'] != '') {
+                $query->where('info_title','LIKE', '%' . $dataSearch['info_title'] . '%');
+            }if (isset($dataSearch['info_status']) && $dataSearch['info_status'] != -2) {
+                $query->where('info_status', $dataSearch['info_status'] );
             }
             $total = $query->count();
-            $query->orderBy('news_id', 'desc');
+            $query->orderBy('info_id', 'asc');
 
-            //get field can lay du lieu
             $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',',trim($dataSearch['field_get'])): array();
+            if($limit > 0){
+                $query->take($limit);
+            }
+            if($offset > 0){
+                $query->skip($offset);
+            }
             if(!empty($fields)){
-                $result = $query->take($limit)->skip($offset)->get($fields);
+                $result = $query->get($fields);
             }else{
-                $result = $query->take($limit)->skip($offset)->get();
+                $result = $query->get();
             }
             return $result;
-
         }catch (PDOException $e){
             throw new PDOException();
         }
+    }
+    public static function removeCache($id = 0,$data){
+        if($id > 0){
+            //Cache::forget(Define::CACHE_ROLE_ID.$id);
+        }
+        Cache::forget(Define::CACHE_OPTION_ROLE);
+    }
+
+    public static function getListAll() {
+        $query = InfoSite::where('info_id','>',0);
+        $query->where('role_status','=', Define::STATUS_SHOW);
+        $list = $query->orderBy('role_order','ASC')->get();
+        return $list;
+    }
+
+    public static function getOptionInfoSite() {
+        $data = Cache::get(Define::CACHE_OPTION_ROLE);
+        if (sizeof($data) == 0) {
+            $arr =  InfoSite::getListAll();
+            foreach ($arr as $value){
+                $data[$value->info_id] = $value->role_name;
+            }
+            if(!empty($data)){
+                Cache::put(Define::CACHE_OPTION_ROLE, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
+        }
+        return $data;
     }
 }

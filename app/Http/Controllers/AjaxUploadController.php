@@ -12,8 +12,10 @@ use App\Http\Models\Hr\HrDocument;
 use App\Http\Models\Hr\HrMail;
 use App\Http\Models\News\News;
 use App\Library\AdminFunction\CGlobal;
+use App\Http\Models\News\News;
 use App\Library\AdminFunction\Define;
 use App\Library\AdminFunction\FunctionLib;
+use App\Library\AdminFunction\CGlobal;
 use App\Library\AdminFunction\Upload;
 use App\Library\PHPThumb\ThumbImg;
 use Illuminate\Support\Facades\Request;
@@ -57,8 +59,8 @@ class AjaxUploadController extends BaseAdminController{
 		$aryData['msg'] = "Data not exists!";
 
 		switch( $type ){
-			case 1 ://Img device
-				$aryData = $this->uploadImageToFolderOnce($dataImg, $id_hiden, Define::FOLDER_DEVICE, $type);
+			case Define::TYPE_UPLOAD_NEWS ://Img News
+				$aryData = $this->uploadImageToFolder($dataImg, $id_hiden, Define::FOLDER_NEWS, $type);
 				break;
 			case 2 ://Img News
 				$aryData = $this->uploadImageToFolder($dataImg, $id_hiden, Define::FOLDER_NEWS, $type);
@@ -153,9 +155,15 @@ class AjaxUploadController extends BaseAdminController{
 		if (!empty($dataImg)) {
 			if($id_hiden == 0){
 				switch($type){
+
 					case 2://Img News
 						$new_row['news_create'] = time();
 						$new_row['news_status'] = Define::IMAGE_ERROR;
+
+					case Define::TYPE_UPLOAD_NEWS://Img News
+						$new_row['news_created'] = time();
+						$new_row['news_status'] = CGlobal::IMAGE_ERROR;
+
 						$item_id = News::createItem($new_row);
 						break;
 					default:
@@ -182,6 +190,10 @@ class AjaxUploadController extends BaseAdminController{
 					switch($type){
 						case 2://Img News
 							$result = News::getItemById($item_id);
+
+						case Define::TYPE_UPLOAD_NEWS://Img News
+							$result = News::find($item_id);
+
 							if($result != null){
 								$aryTempImages = ($result->news_image_other != '') ? unserialize($result->news_image_other) : array();
 								$aryTempImages[] = $file_name;
@@ -199,13 +211,25 @@ class AjaxUploadController extends BaseAdminController{
 									}
 								}
 								$url_thumb = ThumbImg::thumbBaseNormal($folder, $file_name, $x, $y, '', true, true);
+
+                                $arrSize = Define::$arrSizeImage;
+                                if(isset($arrSize[Define::sizeImage_300])){
+                                    $size = $arrSize[Define::sizeImage_300];
+                                    if(!empty($size)){
+                                        $x = (int)$size['w'];
+                                        $y = (int)$size['h'];
+                                    }else{
+                                        $x = $y = Define::sizeImage_300;
+                                    }
+                                }
+								$url_thumb = ThumbImg::thumbBaseNormal(Define::FOLDER_NEWS, $file_name, $x, $y, '', true, true);
+
 								$tmpImg['src'] = $url_thumb;
 							}
 							break;
 						default:
 							break;
 					}
-
 					$aryData['intIsOK'] = 1;
 					$aryData['id_item'] = FunctionLib::inputId($item_id);
 					$aryData['info'] = $tmpImg;
@@ -226,7 +250,7 @@ class AjaxUploadController extends BaseAdminController{
 		$aryData['nameImage'] = $nameImage;
 
 		switch( $type ){
-			case 1://Img device
+			case Define::TYPE_UPLOAD_NEWS://Img news
 				if($id > 0 && $nameImage != ''){
 					$delete_action = $this->delete_image_item($id, $nameImage, $type);
 					if($delete_action == 1){
@@ -266,13 +290,13 @@ class AjaxUploadController extends BaseAdminController{
 		$folder_image =  $folder_thumb = '';
 		//get img in DB and remove it
 		switch( $type ){
-			case 1://Img device
-				$result = Device::getItemById($id);
+			case Define::TYPE_UPLOAD_NEWS://Img news
+				$result = News::find($id);
 				if($result != null){
-					$aryImages = array($result->device_image);
+					$aryImages = array($result->news_image);
 				}
-				$folder_image = 'uploads/'.Define::FOLDER_DEVICE;
-				$folder_thumb = 'uploads/thumbs/'.Define::FOLDER_DEVICE;
+				$folder_image = 'uploads/'.Define::FOLDER_NEWS;
+				$folder_thumb = 'uploads/thumbs/'.Define::FOLDER_NEWS;
 				break;
 			case 9://File mail
 				$result = HrMail::getItemById($id);
@@ -299,7 +323,7 @@ class AjaxUploadController extends BaseAdminController{
 		if(is_array($aryImages) && count($aryImages) > 0) {
 			foreach ($aryImages as $k => $v) {
 				if($v === $nameImage){
-					if($type == 1){//Img device
+					if($type == Define::TYPE_UPLOAD_NEWS){//Img News
 						$this->unlinkFileAndFolder($nameImage, $folder_image, true, 0);
 						$this->unlinkFileAndFolder($nameImage, $folder_thumb, true, 0);
 					}else{

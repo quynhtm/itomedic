@@ -9,7 +9,7 @@
                 <i class="ace-icon fa fa-home home-icon"></i>
                 <a href="{{URL::route('admin.dashboard')}}">Home</a>
             </li>
-            <li class="active">Quản lý tin tức</li>
+            <li class="active">Quản lý sản phẩm</li>
         </ul><!-- /.breadcrumb -->
     </div>
 
@@ -34,7 +34,7 @@
 
                         <div class="form-group col-lg-12 text-right">
                             @if($is_root || $permission_full ==1 || $permission_create == 1)
-                                <a class="btn btn-danger btn-sm" href="{{URL::route('admin.newsEdit',array('id' => FunctionLib::inputId(0)))}}">
+                                <a class="btn btn-danger btn-sm" href="{{URL::route('admin.newsEditProduct',array('id' => FunctionLib::inputId(0)))}}">
                                     <i class="ace-icon fa fa-plus-circle"></i>
                                     {{FunctionLib::viewLanguage('add')}}
                                 </a>
@@ -52,21 +52,19 @@
                     <table class="table table-bordered table-hover">
                         <thead class="thin-border-bottom">
                         <tr class="">
-                            <th class="text-center text-middle" width="2%" class="text-center">TT</th>
-                            <th class="text-center text-middle" width="8%">Ảnh</th>
-                            <th class="text-center text-middle" width="25%">Tiêu đề</th>
-                            <th width="15%" class="text-center">Danh mục</th>
+                            <th width="5%" class="text-center">TT</th>
+                            <th width="10%">Ảnh</th>
+                            <th width="35%">Tiêu đề</th>
+                            <th width="15%" class="text-center">Thuộc danh mục</th>
+                            <th width="15%" class="text-center">Loại tin</th>
                             <th width="10%" class="text-center">Trạng thái</th>
                             <th width="10%" class="text-center">Action</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach ($data as $key => $item)
-                            <tr>
+                            <tr @if($item['parent_id'] == 0)style="background-color:#d6f6f6"@endif>
                                 <td class="text-center text-middle">{!! $stt + $key+1 !!}</td>
-                                <td class="text-center text-middle"></td>
-                                <td class="text-middle" >{!! $item['news_title'] !!}</td>
-                                <td class="text-middle">{!! $item['news_category'] !!}</td>
                                 <td></td>
                                 <td>{!! $item['news_title'] !!}</td>
                                 <td class="text-center text-middle">
@@ -89,7 +87,7 @@
 
                                 <td class="text-center text-middle">
                                     @if($is_root || $permission_full ==1|| $permission_edit ==1  )
-                                        <a href="{{URL::route('admin.newsEdit',array('id' => FunctionLib::inputId($item['news_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
+                                        <a href="{{URL::route('admin.newsEditProduct',array('id' => FunctionLib::inputId($item['news_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
                                     @endif
                                     @if($is_boss)
                                         <a href="javascript:void(0);" onclick="Admin.deleteItem({{$item['news_id']}},2)" title="Xóa Item"><i class="fa fa-trash fa-2x"></i></a>

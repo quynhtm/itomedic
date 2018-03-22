@@ -72,6 +72,7 @@
     <script src="{{URL::asset('assets/admin/js/format.js')}}"></script>
     <script src="{{URL::asset('assets/lib/datetimepicker/jquery.datetimepicker.js')}}"></script>
     <script src="{{URL::asset('assets/admin/js/hr.js')}}"></script>
+    <script src="{{URL::asset('assets/admin/js/baseUpload.js')}}"></script>
 
     {!!CGlobal::$extraHeaderCSS!!}
     {!!CGlobal::$extraHeaderJS!!}

@@ -12,6 +12,11 @@ Route::get('news/edit/{id?}', array('as' => 'admin.newsEdit','uses' => News.'\Ne
 Route::post('news/edit/{id?}', array('as' => 'admin.newsEdit','uses' => News.'\NewsController@postItem'));
 Route::post('news/deleteNews', array('as' => 'admin.deleteNews','uses' => News.'\NewsController@deleteNews'));//ajax
 
+/// /*thông tin sản phẩm*/
+Route::get('news/viewProduct',array('as' => 'admin.newsViewProduct','uses' => News.'\NewsController@viewProduct'));
+Route::get('news/editProduct/{id?}', array('as' => 'admin.newsEditProduct','uses' => News.'\NewsController@getItemProduct'));
+Route::post('news/editProduct/{id?}', array('as' => 'admin.newsEditProduct','uses' => News.'\NewsController@postItemProduct'));
+
 /*thông tin video */
 Route::get('video/view',array('as' => 'admin.videoView','uses' => Admin.'\AdminVideoController@view'));
 Route::get('video/edit/{id?}', array('as' => 'admin.videoEdit','uses' => Admin.'\AdminVideoController@getItem'));
@@ -29,3 +34,10 @@ Route::get('contact/view',array('as' => 'admin.contactView','uses' => Admin.'\Ad
 Route::get('contact/edit/{id?}', array('as' => 'admin.contactEdit','uses' => Admin.'\AdminContactController@getItem'));
 Route::post('contact/edit/{id?}', array('as' => 'admin.contactEdit','uses' => Admin.'\AdminContactController@postItem'));
 Route::post('contact/deleteContact', array('as' => 'admin.deleteContact','uses' => Admin.'\AdminContactController@deleteContact'));//ajax
+
+/*thong tin chung*/
+
+Route::get('info/view',array('as' => 'admin.infoView','uses' => Admin.'\AdminInfoController@view'));
+Route::get('info/edit/{id?}', array('as' => 'admin.infoEdit','uses' => Admin.'\AdminInfoController@getItem'));
+Route::post('info/edit/{id?}', array('as' => 'admin.infoEdit','uses' => Admin.'\AdminInfoController@postItem'));
+Route::post('info/deleteInfo', array('as' => 'admin.deleteInfo','uses' => Admin.'\AdminInfoController@deleteInfo'));//ajax

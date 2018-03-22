@@ -101,7 +101,7 @@ class CategoryNew extends BaseModel
         Cache::forget(Define::CACHE_ALL_PARENT_CATEGORY);
         Cache::forget(Define::CACHE_ALL_PARENT_CATEGORY.'_'.$data->category_type);
         Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$data->category_parent_id);
-
+        Cache::forget(Define::CACHE_CATEGORY_NEWS);
     }
 
     public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
@@ -155,6 +155,24 @@ class CategoryNew extends BaseModel
             }
             if($data && Define::CACHE_ON){
                 Cache::put(Define::CACHE_ALL_PARENT_CATEGORY, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+			}
+		}
+	}	
+
+    public static function getCategoryNews(){
+        $data = Cache::get(Define::CACHE_CATEGORY_NEWS);
+        if (sizeof($data) == 0) {
+            $result = CategoryNew::where('category_id', '>', 0)
+                ->whereIn('category_type',array(Define::Category_News_Menu,Define::Category_News_News,Define::Category_News_Note))
+                ->where('category_status',Define::STATUS_SHOW)
+                ->orderBy('category_order','asc')->get();
+            if($result){
+                foreach($result as $itm) {
+                    $data[$itm['category_id']] = $itm['category_name'];
+                }
+            }
+            if(!empty($data)){
+                Cache::put(Define::CACHE_CATEGORY_NEWS, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
             }
         }
         return $data;
@@ -192,10 +210,28 @@ class CategoryNew extends BaseModel
             }
             if($data && Define::CACHE_ON){
                 Cache::put(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$parentId, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+			}
+		}
+	}	
+    public static function getCategoryProduct(){
+        $data = Cache::get(Define::CACHE_CATEGORY_PRODUCT);
+        if (sizeof($data) == 0) {
+            $result = CategoryNew::where('category_id', '>', 0)
+                ->whereIn('category_type',array(Define::Category_News_Product))
+                ->where('category_status',Define::STATUS_SHOW)
+                ->orderBy('category_order','asc')->get();
+            if($result){
+                foreach($result as $itm) {
+                    $data[$itm['category_id']] = $itm['category_name'];
+                }
+            }
+            if(!empty($data)){
+                Cache::put(Define::CACHE_CATEGORY_PRODUCT, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
             }
         }
         return $data;
     }
+
     public static function buildTreeCategory($category_type = 0){
         if($category_type > 0){
             $categories = CategoryNew::where('category_id', '>', 0)
@@ -262,5 +298,4 @@ class CategoryNew extends BaseModel
             }
         }
     }
-
 }

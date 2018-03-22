@@ -34,6 +34,7 @@ class Define
     const TABLE_WEB_CONTACT = 'web_contact';
     const TABLE_WEB_NEW = 'web_news';
     const TABLE_WEB_VIDEO = 'web_video';
+    const TABLE_WEB_INFO = 'web_info';
 
 
     /***************************************************************************************************************
@@ -65,6 +66,9 @@ class Define
 
     const CACHE_OPTION_ROLE = 'cache_option_role';
 
+    //danh mục tin tức
+    const CACHE_CATEGORY_NEWS = 'cache_category_news';
+    const CACHE_CATEGORY_PRODUCT = 'cache_category_product';
     //Hr nhân sự
     const CACHE_PERSON = 'cache_info_person_id_';
 
@@ -204,12 +208,14 @@ class Define
         Define::linh_vuc => 'Lĩnh vực',
     );
 
+    //type upload
+    const TYPE_UPLOAD_NEWS = 1;
     //Folder
     const IMAGE_ERROR = -1000;
     const FOLDER_DEVICE = 'device';
+    const FOLDER_NEWS = 'img_news';
     const FOLDER_DOCUMENT = 'document';
     const FOLDER_MAIL = 'mail';
-    const FOLDER_NEWS = 'news';
 
     const sizeImage_80 = 80;
     const sizeImage_100 = 100;
@@ -235,6 +241,14 @@ class Define
         self::Category_News_News => 'Danh Mục Tin Tức',
         self::Category_News_Product => 'Danh Mục Sản Phẩm',
         self::Category_News_Note => 'Danh Mục Ghi Chú',
+    ];
+
+    //loại tin tức, hay sản phẩm của bài viết tin tức
+    const news_type_new = 1;
+    const news_type_product = 2;
+    public static $arrTypeNews = [
+        self::news_type_new => 'Loại tin tức',
+        self::news_type_product => 'Loại sản phẩm'
     ];
     const Banner_Page_Home = 1;
     const Banner_Page_List = 2;
@@ -262,4 +276,8 @@ class Define
         self::Banner_is_Run_Time => 'Chọn thời gian chạy',
         self::Banner_no_Run_Time => 'Vĩnh viễn',
     ];
+
+    //InfoSite
+    const INFO_FOOTER = 1;
+    const INFO_CONTACT = 2;
 }
