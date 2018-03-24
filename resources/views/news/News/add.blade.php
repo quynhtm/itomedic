@@ -56,15 +56,7 @@
                             <button  class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('save')}}</button>
                         </div>
                     </div>
-                    <div class="col-sm-10">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Thuộc danh mục</label>
-                            <select name="news_category" id="news_category" class="form-control input-sm">
-                                <option value="0">--- Chọn danh mục ---</option>
-                                {!! $optionCategoryNew !!}
-                            </select>
-                        </div>
-                    </div>
+                    
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label for="name" class="control-label">Trạng thái</label>

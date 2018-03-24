@@ -113,6 +113,7 @@ class NewsController extends BaseAdminController
             'stt' => ($pageNo - 1) * $limit,
             'paging' => $paging,
             'optionStatus' => $optionStatus,
+            'optionCategoryNew' => $optionCategoryNew,
         ], $this->viewPermission));
     }
     public function getItem($ids)
@@ -154,10 +155,8 @@ class NewsController extends BaseAdminController
             'id'=>$id,
             'arrStatus'=>$this->arrStatus,
             'optionStatus'=>$optionStatus,
-            'optionShowContent'=>$optionShowContent,
-            'optionShowPermission'=>$optionShowPermission,
-            'optionShowMenu'=>$optionShowMenu,
             'optionCategory'=>$optionCategory,
+            'optionCategoryNew '=>$optionCategoryNew ,
         ],$this->viewPermission));
 
         return view('news.News.add', array_merge([
