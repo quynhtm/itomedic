@@ -148,7 +148,7 @@
         jQuery('#sys_PopupImgOtherInsertContent #div_image').html('');
         baseUpload.getInsertImageContent(type, 'off');
     },
-    getInsertImageContent: function(type, popup) {
+    getInsertImageContent: function(type, popup='open') {
         if(popup == 'open'){
             jQuery('#sys_PopupImgOtherInsertContent').modal('show');
         }

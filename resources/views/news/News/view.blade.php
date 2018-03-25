@@ -1,5 +1,8 @@
-<?php use App\Library\AdminFunction\FunctionLib; ?>
-<?php use App\Library\AdminFunction\Define; ?>
+<?php
+use App\Library\AdminFunction\FunctionLib;
+use App\Library\AdminFunction\Define;
+use App\Library\PHPThumb\ThumbImg;
+?>
 @extends('admin.AdminLayouts.index')
 @section('content')
 <div class="main-content-inner">
@@ -54,8 +57,9 @@
                         <tr class="">
                             <th class="text-center text-middle" width="2%" class="text-center">TT</th>
                             <th class="text-center text-middle" width="8%">Ảnh</th>
-                            <th class="text-center text-middle" width="25%">Tiêu đề</th>
+                            <th class="text-middle" width="25%">Tiêu đề</th>
                             <th width="15%" class="text-center">Danh mục</th>
+                            <th width="10%" class="text-center">Loại tin</th>
                             <th width="10%" class="text-center">Trạng thái</th>
                             <th width="10%" class="text-center">Action</th>
                         </tr>
@@ -64,11 +68,12 @@
                         @foreach ($data as $key => $item)
                             <tr>
                                 <td class="text-center text-middle">{!! $stt + $key+1 !!}</td>
-                                <td class="text-center text-middle"></td>
+                                <td class="text-center text-middle">
+                                    @if(isset($item['news_image']) && $item['news_image'] != '')
+                                        <img class="bd_ddd" src="{{ThumbImg::thumbBaseNormal(Define::FOLDER_NEWS.'/'.$item['news_id'], $item['news_image'], 300, 300, '', true, true)}}" height="50">
+                                    @endif
+                                </td>
                                 <td class="text-middle" >{!! $item['news_title'] !!}</td>
-                                <td class="text-middle">{!! $item['news_category'] !!}</td>
-                                <td></td>
-                                <td>{!! $item['news_title'] !!}</td>
                                 <td class="text-center text-middle">
                                     @if(isset($arrCategoryNew[$item['news_category']]))
                                         {{$arrCategoryNew[$item['news_category']]}}

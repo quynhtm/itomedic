@@ -12,6 +12,7 @@ use App\Library\AdminFunction\Loader;
 
 use App\Library\AdminFunction\Upload;
 
+use App\Library\PHPThumb\ThumbImg;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
@@ -103,6 +104,8 @@ class NewsController extends BaseAdminController
         $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, $search['news_status']);
 
+        $optionCategoryNew = FunctionLib::getOption($this->arrCategoryNew, $search['news_category']);
+
         $this->viewPermission = $this->getPermissionPage();
         return view('news.News.view', array_merge([
             'data' => $dataSearch,
@@ -135,9 +138,24 @@ class NewsController extends BaseAdminController
         Loader::loadJS('admin/js/baseUpload.js', CGlobal::$POS_END);
         Loader::loadJS('lib/dragsort/jquery.dragsort.js', CGlobal::$POS_HEAD);
 
-        $data = array();
+        $data = $news_image_other = array();
+        $news_image = '';
         if ($id > 0) {
             $data = News::find($id);
+            if($data != null){
+                if($data->news_image_other != ''){
+                    $newsImageOther = unserialize($data->news_image_other);
+                    if(!empty($newsImageOther)){
+                        foreach($newsImageOther as $k=>$v){
+                            $folder = Define::FOLDER_NEWS.'/'.$id;
+                            $url_thumb = ThumbImg::thumbBaseNormal($folder, $v, 300, 300, '', true, true);
+                            $news_image_other[] = array('img_other'=>$v,'src_img_other'=>$url_thumb);
+                        }
+                    }
+                }
+                //Main Img
+                $news_image = trim($data->news_image);
+            }
         }
 
         $this->getDataDefault();
@@ -145,31 +163,21 @@ class NewsController extends BaseAdminController
         $optionType = FunctionLib::getOption($this->arrTypeNews, isset($data['news_type']) ? $data['news_type'] : Define::news_type_new);
         $optionCategoryNew = FunctionLib::getOption($this->arrCategoryNew, isset($data['news_category']) ? $data['news_category'] : CGlobal::status_hide);
 
-        $optionCategory = FunctionLib::getOption($this->arrCategoryNew, isset($data['news_category'])? $data['news_category'] : CGlobal::status_hide);
-
         $this->viewPermission = $this->getPermissionPage();
 
 
         return view('news.News.add',array_merge([
             'data'=>$data,
             'id'=>$id,
+            'news_image'=>$news_image,
+            'news_image_other'=>$news_image_other,
             'arrStatus'=>$this->arrStatus,
             'optionStatus'=>$optionStatus,
-            'optionCategory'=>$optionCategory,
-            'optionCategoryNew '=>$optionCategoryNew ,
+            'optionType'=>$optionType,
+            'optionCategoryNew'=>$optionCategoryNew ,
         ],$this->viewPermission));
-
-        return view('news.News.add', array_merge([
-            'data' => $data,
-            'id' => $id,
-            'optionStatus' => $optionStatus,
-            'optionType' => $optionType,
-            'optionCategoryNew' => $optionCategoryNew,
-        ], $this->viewPermission));
-
     }
-    public function postItem($ids)
-    {
+    public function postItem($ids){
         Loader::loadCSS('lib/upload/cssUpload.css', CGlobal::$POS_HEAD);
         Loader::loadJS('lib/upload/jquery.uploadfile.js', CGlobal::$POS_END);
         Loader::loadJS('admin/js/baseUpload.js', CGlobal::$POS_END);
@@ -184,15 +192,36 @@ class NewsController extends BaseAdminController
         $id_hiden = (int)Request::get('id_hiden', 0);
         $data = $_POST;
         $data['news_type'] = Define::news_type_new;
+        if(isset($data['news_order_no'])){
+            $data['news_order_no'] = (int)$data['news_order_no'];
+        }
+
+        //Main Img
+        $image_primary = addslashes(Request::get('image_primary', ''));
+        //Other Img
+        $arrInputImgOther = array();
+        $getImgOther = Request::get('img_other',array());
+        if(!empty($getImgOther)){
+            foreach($getImgOther as $k=>$val){
+                if($val !=''){
+                    $arrInputImgOther[] = $val;
+                }
+            }
+        }
+        if (!empty($arrInputImgOther) && count($arrInputImgOther) > 0) {
+            //Neu Ko chon Anh Chinh, Lay Anh Chinh La Cai Dau Tien
+            $data['news_image'] = ($image_primary != '') ? $image_primary : $arrInputImgOther[0];
+            $data['news_image_other'] = serialize($arrInputImgOther);
+        }
+
         if ($this->valid($data) && empty($this->error)) {
             $id = ($id == 0) ? $id_hiden : $id;
             if ($id > 0) {
-                //cap nhat
+
                 if (News::updateItem($id, $data)) {
                     return Redirect::route('admin.newsView');
                 }
             } else {
-                //them moi
                 if (News::createItem($data)) {
                     return Redirect::route('admin.newsView');
                 }

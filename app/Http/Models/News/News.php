@@ -17,7 +17,7 @@ class News extends BaseModel
     public $timestamps = false;
 
     protected $fillable = array('news_title', 'news_desc_sort', 'news_content', 'news_image', 'news_image_other',
-        'news_type', 'news_category','news_category_name','news_status'
+        'news_type', 'news_category','news_category_name','news_status', 'news_order_no'
     ,'news_hot','meta_title','meta_keywords','meta_description ','news_create','news_user_create','news_update','news_user_update');
 
     public static function createItem($data){
